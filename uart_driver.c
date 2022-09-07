@@ -1,29 +1,31 @@
 #include "uart_driver.h"
+#include "macros.h"
 
 void USART_init(unsigned int ubrr){
     /* Set BAUD RATE */
-    UBRRH = (unsigned char)(ubrr>>8);
-    UBRRL = (unsigned char)ubrr;
+    UBRR0H = (unsigned char)(ubrr>>8);  // fill 8 highest bits from 16 bit number
+    UBRR0L = (unsigned char)ubrr;       // fill rest of bits
+
     /* Endable receiver and transmitter */
-    UCSRB = (1 << RXEN) | (1 << TXEN);
-    /* */
-    UCRSC = (1 << URSEL) | (1 << USBS) | (3 << UCSZ0)
+    UCSR0B = (1 << RXEN) | (1 << TXEN);
+
+    /* 2 stop bits */
+    UCRS0C = (1 << URSEL) | (1 << USBS) | (3 << UCSZ0);
+
+    fdevopen(USART_transmit,USART_receive);
 }
 
-void USART_transmit(unsigned char data){
+int USART_transmit(unsigned char data){
     /* Wait for empty transmit buffer */
-    while( !(UCSRA & (1<<UDRE)) ){ // While not UDRE bit in UCSRA ie if not data empty, wait
-        // Wait
-    }
+    loop_until_bit_is_set(UCSR0A,UDRE0);
     /* Put data into buffer, sends the data */
-    UDR = data;
+    UDR0 = data;
+    return 0;
 }
 
 
 unsigned char USART_receive(void){
     /* Wait for data to be received */
-    while ( !(UCRSA & (1 << RXC)) ){ // If not Receive Complete
-        // Wait
-    }
-    return UDR;
+    loop_until_bit_is_set(UCRS0A,RXC0);
+    return UDR0;
 }

@@ -10,6 +10,29 @@
 #include "stdio.h"
 #include <avr/sleep.h>
 #include "uart_driver.h"
+#include <stdio.h>
+
+
+#include <stdio.h>
+static int uart_putchar(char c, FILE *stream);
+static FILE uart_str = FDEV_SETUP_STREAM(USART_transmit, USART_receive, _FDEV_SETUP_RW);
+static int
+// uart_putchar(char c, FILE *stream)
+// {
+
+
+//   if (c == '0')
+//     uart_putchar('', stream);
+
+
+//   loop_until_bit_is_set(UCSRA, UDRE);
+
+
+//   UDR = c;
+
+
+//   return 0;
+// }
 
 int main(void)
 {
@@ -18,11 +41,11 @@ int main(void)
 	// PORTA |= 0b00000001;
     // while (1)
     // {}
+	// FILE* mystream = fdevopen(&USART_transmit, &USART_receive)
 	USART_init(MYUBRR);
-	unsigned char myMessage = 'c';
-	USART_transmit(myMessage);
-	unsigned char myResponse = USART_receive();
-	printf(myResponse);
+	stdout = &uart_str;
+	// unsigned char myResponse = USART_receive();
+	printf("Hello world!");
 }
 
 	
