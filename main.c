@@ -11,6 +11,7 @@
 #include <avr/sleep.h>
 #include "uart_driver.h"
 #include <stdio.h>
+#include "macros.h"
 
 
 #include <stdio.h>
@@ -36,6 +37,8 @@ static int
 
 int main(void)
 {
+	set_bit(MCUCR,SRE);			// Enable external SRAM.
+	set_bit(SFIOR,XMM2);		// Disable 4 highest bits in xmem address space (PC4-PC7), they are reserved for JTAG
 	/* Turn on LED in PA0 */
 	// DDRA |= 0b00000001;
 	// PORTA |= 0b00000001;
