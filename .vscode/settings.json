@@ -1,6 +1,9 @@
 {
     "files.associations": {
         "uart_driver.h": "c",
-        "stdio.h": "c"
-    }
+        "stdio.h": "c",
+        "iom162.h": "c",
+        "io.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
 }
