@@ -1,5 +1,5 @@
 # List all source files to be compiled; separate with space
-SOURCE_FILES := main.c, uart_driver.c
+SOURCE_FILES := main.c uart_driver.c
 
 # Set this flag to "yes" (no quotes) to use JTAG; otherwise ISP (SPI) is used
 PROGRAM_WITH_JTAG := yes
@@ -42,7 +42,7 @@ clean:
 .PHONY: erase
 erase:
 	avrdude -p $(TARGET_DEVICE) -c $(PROGRAMMER) -e
-
+	
 .PHONY: debug
 debug:
 	if pgrep avarice; then pkill avarice; fi
@@ -50,4 +50,4 @@ debug:
 	x-terminal-emulator -e avarice --edbg --ignore-intr :4242
 	sleep 2
 	avr-gdb -tui -iex "target remote localhost:4242" $(BUILD_DIR)/a.out
-	killall -s 9 avarice
+	killall -s 9 avarice	

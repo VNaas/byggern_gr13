@@ -8,17 +8,15 @@
 #include <avr/io.h>
 #include "avr/iom162.h"
 #include "stdio.h"
-#include <avr/sleep.h>
+#include <util/delay.h>
 #include "uart_driver.h"
 #include <stdio.h>
-#include "macros.h"
 
 
 #include <stdio.h>
-static int uart_putchar(char c, FILE *stream);
-static FILE uart_str = FDEV_SETUP_STREAM(USART_transmit, USART_receive, _FDEV_SETUP_RW);
-static int
-// uart_putchar(char c, FILE *stream)
+// static int uart_putchar(char c, FILE *stream);
+// static FILE uart_str = FDEV_SETUP_STREAM(USART_transmit, USART_receive, _FDEV_SETUP_RW);
+// // uart_putchar(char c, FILE *stream)
 // {
 
 
@@ -37,18 +35,27 @@ static int
 
 int main(void)
 {
-	set_bit(MCUCR,SRE);			// Enable external SRAM.
-	set_bit(SFIOR,XMM2);		// Disable 4 highest bits in xmem address space (PC4-PC7), they are reserved for JTAG
 	/* Turn on LED in PA0 */
-	// DDRA |= 0b00000001;
-	// PORTA |= 0b00000001;
-    // while (1)
+	DDRA |= 0b11111111;
+	PORTA |= 0b00000001;
+
+	/*latch enabling*/
+	// PORTE |= 0b0; //Adress Latch Enable set to low
+
+	// while (1)
     // {}
+
+	
+
 	// FILE* mystream = fdevopen(&USART_transmit, &USART_receive)
 	USART_init(MYUBRR);
-	stdout = &uart_str;
+	// stdout = &uart_str;
 	// unsigned char myResponse = USART_receive();
-	printf("Hello world!");
-}
+	while(1){
+			USART_transmit('c');
+			_delay_ms(1000);
+	}
+	return 0;
 
+}
 	

@@ -1,5 +1,8 @@
+#include <avr/io.h>
+#include <avr/iom162.h>
+#include <stdio.h>
+#include <avr/sleep.h>
 #include "uart_driver.h"
-#include "macros.h"
 
 void USART_init(unsigned int ubrr){
     /* Set BAUD RATE */
@@ -7,10 +10,10 @@ void USART_init(unsigned int ubrr){
     UBRR0L = (unsigned char)ubrr;       // fill rest of bits
 
     /* Endable receiver and transmitter */
-    UCSR0B = (1 << RXEN) | (1 << TXEN);
+    UCSR0B = (1 << RXEN0) | (1 << TXEN0);
 
     /* 2 stop bits */
-    UCRS0C = (1 << URSEL) | (1 << USBS) | (3 << UCSZ0);
+    UCSR0C = (1 << URSEL0) | (1 << USBS0) | (3 << UCSZ00);
 
     fdevopen(USART_transmit,USART_receive);
 }
@@ -26,6 +29,6 @@ int USART_transmit(unsigned char data){
 
 unsigned char USART_receive(void){
     /* Wait for data to be received */
-    loop_until_bit_is_set(UCRS0A,RXC0);
+    loop_until_bit_is_set(UCSR0A,RXC0);
     return UDR0;
 }

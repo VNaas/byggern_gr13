@@ -1,9 +1,3 @@
-
-#include <avr/io.h>
-#include "avr/iom162.h"
-#include "stdio.h"
-#include <avr/sleep.h>
-
 #ifndef UART_DRIVER_H
 #define UART_DRIVER_H
 
@@ -13,8 +7,8 @@
 
 void USART_init(unsigned int ubrr);
 
-int USART_transmit(unsigned char data, FILE* stream);
+int USART_transmit(unsigned char data);
 
-unsigned char USART_receive(void, FILE* stream);
+unsigned char USART_receive(void);
 
 #endif /* UART_DRIVER_H */
