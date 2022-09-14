@@ -6,13 +6,9 @@
  */
 
 #include <avr/io.h>
-#include "avr/iom162.h"
-#include "stdio.h"
+#define F_CPU 4915200
 #include <util/delay.h>
 #include "uart_driver.h"
-#include <stdio.h>
-
-
 #include <stdio.h>
 // static int uart_putchar(char c, FILE *stream);
 // static FILE uart_str = FDEV_SETUP_STREAM(USART_transmit, USART_receive, _FDEV_SETUP_RW);
@@ -45,7 +41,7 @@ int main(void)
 	// while (1)
     // {}
 
-	
+
 
 	// FILE* mystream = fdevopen(&USART_transmit, &USART_receive)
 	USART_init(MYUBRR);
@@ -58,4 +54,3 @@ int main(void)
 	return 0;
 
 }
-	
