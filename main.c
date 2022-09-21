@@ -10,24 +10,20 @@
 #include <util/delay.h>
 #include "uart_driver.h"
 #include <stdio.h>
-// static int uart_putchar(char c, FILE *stream);
-// static FILE uart_str = FDEV_SETUP_STREAM(USART_transmit, USART_receive, _FDEV_SETUP_RW);
-// // uart_putchar(char c, FILE *stream)
-// {
 
+void latch_test(void){
+	/* --------------latch test:--------------------*/
+	DDRA |= 0b11111111; //alle er output pins
+	DDRE |= (1<<PE1); //HUSK at ting må være output pins
 
-//   if (c == '0')
-//     uart_putchar('', stream);
+	PORTA |= 0b11111111; //all pins high
 
+	PORTE |= (1 << PE1); //latch disabled
+	_delay_ms(3000); 
 
-//   loop_until_bit_is_set(UCSRA, UDRE);
-
-
-//   UDR = c;
-
-
-//   return 0;
-// }
+	PORTE &= ~(1 << PE1); //latch enable, all outputs of latch should be high regardless of input
+	PORTA &=~((1 << PA0 ) | (1 << PA1 ) | (1 << PA7 ));
+}
 
 int main(void)
 {
