@@ -23,7 +23,7 @@
 //   loop_until_bit_is_set(UCSRA, UDRE);
 
 
-//   UDR = c;
+//   UDR = c; how about now
 
 
 //   return 0;
