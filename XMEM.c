@@ -11,7 +11,7 @@ void XMEM_init(void){
 int XMEM_write(uint8_t data, uint16_t addr){
     volatile char* ext_mem = (char*) XMEM_BASE;
         if(addr >= XMEM_SIZE){
-        printf("Writing to address outside Memory");
+        printf("Writing to address outside SRAM\n");
         return 0;   // TODO: ERROR HANDLING
     }
     ext_mem[addr] = data;
@@ -21,7 +21,7 @@ int XMEM_write(uint8_t data, uint16_t addr){
 uint8_t XMEM_read(uint16_t addr){
     volatile char* ext_mem = (char*) XMEM_BASE;
     if(addr >= XMEM_SIZE){
-        printf("Reading from address outside Memory");
+        printf("Reading from address outside SRAM\n");
         return 0;   // TODO: ERROR HANDLING
     }
 
