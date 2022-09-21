@@ -10,6 +10,7 @@
 #include <util/delay.h>
 #include "uart_driver.h"
 #include <stdio.h>
+#include "ADC_driver.h"
 
 void latch_test(void){
 	/* --------------latch test:--------------------*/
@@ -19,7 +20,7 @@ void latch_test(void){
 	PORTA |= 0b11111111; //all pins high
 
 	PORTE |= (1 << PE1); //latch disabled
-	_delay_ms(3000); 
+	_delay_ms(3000);
 
 	PORTE &= ~(1 << PE1); //latch enable, all outputs of latch should be high regardless of input
 	PORTA &=~((1 << PA0 ) | (1 << PA1 ) | (1 << PA7 ));
@@ -44,7 +45,12 @@ int main(void)
 	// stdout = &uart_str;
 	// unsigned char myResponse = USART_receive();
 	while(1){
-			USART_transmit('c');
+			ADC_start_conversion();
+			struct ADC_data data = ADC_get_data();
+			printf("Channel 0: %u\n", data.ch_0);
+			printf("Channel 1: %u\n", data.ch_1);
+			printf("Channel 2: %u\n", data.ch_2);
+			printf("Channel 3: %u\n", data.ch_3);
 			_delay_ms(1000);
 	}
 	return 0;
