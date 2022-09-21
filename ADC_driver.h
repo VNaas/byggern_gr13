@@ -1,13 +1,15 @@
 #ifndef ADC_DRIVER_H
 #define ADC_DRIVER_H
+#include <stdlib.h>
+#include <inttypes.h>
 
 #define ADC_BASE 0x1400
 
 struct ADC_data
 {
-    uint8_t ch_0;
-    uint8_t ch_1;
-    uint8_t ch_2;
+    uint8_t ch_0;   // y dir
+    uint8_t ch_1;   // x dir
+    uint8_t ch_2;   
     uint8_t ch_3;
 };
 

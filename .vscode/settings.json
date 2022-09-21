@@ -4,7 +4,10 @@
         "stdio.h": "c",
         "iom162.h": "c",
         "io.h": "c",
-        "macros.h": "c"
+        "macros.h": "c",
+        "stdlib.h": "c",
+        "inttypes.h": "c",
+        "sfr_defs.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

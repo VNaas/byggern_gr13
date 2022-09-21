@@ -67,13 +67,17 @@ int main(void)
 {
 	USART_init(MYUBRR);
 	XMEM_init();
+	SRAM_test();
+	ADC_init();
 	while(1){
+			// printf("converting \n");
+
 			ADC_start_conversion();
 			struct ADC_data data = ADC_get_data();
-			printf("Channel 0: %u\n", data.ch_0);
+			printf("Channel 0: %u ", data.ch_0);
 			printf("Channel 1: %u\n", data.ch_1);
-			printf("Channel 2: %u\n", data.ch_2);
-			printf("Channel 3: %u\n", data.ch_3);
+			// printf("Channel 2: %u\n", data.ch_2);
+			// printf("Channel 3: %u\n", data.ch_3);
 			_delay_ms(1000);
 	}
 	return 0;
