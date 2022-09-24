@@ -74,10 +74,10 @@ int main(void)
 
 			ADC_start_conversion();
 			struct ADC_data data = ADC_get_data();
-			printf("Channel 0: %u ", data.ch_0);
-			printf("Channel 1: %u\n", data.ch_1);
-			// printf("Channel 2: %u\n", data.ch_2);
-			// printf("Channel 3: %u\n", data.ch_3);
+			printf("Channel 0: %u \r\n", data.ch_0);
+			printf("Channel 1: %u\r\n", data.ch_1);
+			// printf("Channel 2: %u\r\n", data.ch_2);
+			// printf("Channel 3: %u\r\n", data.ch_3);
 			_delay_ms(1000);
 	}
 	return 0;

@@ -19,6 +19,7 @@ void set_phase_correct_mode(void){
     set_bit(TCCR3B,WGM32);
     set_bit(TCCR3B,WGM33);
 }
+
 void set_no_prescaling(void){
     clear_bit(TCCR3B, CS32);
     clear_bit(TCCR3B, CS31);
@@ -38,27 +39,7 @@ void ADC_init(void){
     set_ctc_mode();
     set_no_prescaling();
     set_toggle_on_compare_match();
-    // Set COM3A0:1 to 01 "Toggle OC3A on compare match"
-    // TCCR3A &= ~(1 << COM3A0);
-    // clear_bit(TCCR3A,COM3A1);
-    // set_bit(TCCR3A,COM3A0);
-
-    // Set Waveform generation mode to 1101 PWM Phase correct,TOP=OCR3A, update OCR3A at TOP
-    // set_bit(TCCR3B,WGM33);
-    // set_bit(TCCR3B,WGM32);
-    // clear_bit(TCCR3A,WGM31);
-    // set_bit(TCCR3A,WGM30);
-    //CTC
-    // clear_bit(TCCR3B,WGM33);
-    // clear_bit(TCCR3B,WGM32);
-    // set_bit(TCCR3A,WGM31);
-    // clear_bit(TCCR3A,WGM30);
-
-    // Set Clock Select 001 clk/1 no prescaling
-    // clear_bit(TCCR3B,CS32);
-    // clear_bit(TCCR3B,CS31);
-    // set_bit(TCCR3B,CS30);
-
+    
     // Set TOP to value 0x00 => F_CLK/2
     OCR3A = 0x00;
 
