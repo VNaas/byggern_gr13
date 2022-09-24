@@ -11,7 +11,8 @@
         "adc_driver.h": "c",
         "joystick_driver.h": "c",
         "interrupt.h": "c",
-        "multifunction_board_driver.h": "c"
+        "multifunction_board_driver.h": "c",
+        "delay.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

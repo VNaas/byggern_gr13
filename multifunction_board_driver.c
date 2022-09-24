@@ -2,7 +2,9 @@
 #include "ADC_driver.h"
 #include "macros.h"
 #include <avr/io.h>
+#define F_CPU 4915200
 #include <util/delay.h>
+#include <stdio.h>
 #include <avr/interrupt.h>
 
 
@@ -52,7 +54,7 @@ int slider_right_get_pos(){
 
 void joystick_calibrate(void){
     ADC_start_conversion();
-    _delay_ms(1);
+    _delay_ms(100);
     struct ADC_data adc_data = ADC_get_data();
     x_offset = adc_data.ch_0;
     y_offset = adc_data.ch_1;
@@ -65,12 +67,7 @@ void set_1024_prescaler(){
     clear_bit(TCCR1B,CS11);
     set_bit(TCCR1B,CS10);
 }
-void set_ctc_mode(void){
-    clear_bit(TCCR1B,WGM13);
-    set_bit(TCCR1B,WGM12);
-    clear_bit(TCCR1A,WGM11);
-    clear_bit(TCCR1A,WGM10);
-}
+
 void multifunction_board_init(){
     clear_bit(DDRB,PB0);  // right button
     clear_bit(DDRB,PB1);  // left button
@@ -78,27 +75,24 @@ void multifunction_board_init(){
     joystick_calibrate();
 
     cli();
-    TCNT1 = 65535-4800/60;  // 60 Hz timer?
+    TCNT1 = 65535-(F_CPU/1024)/60;  // 60 Hz refresh rate
     TCCR1A = 0b00000000;
-    // set_ctc_mode();
-    // TCCR1B = (1<<CS10) | (1<<CS12);  // Timer mode with 1024 prescler
     set_1024_prescaler();
-    set_bit(TIMSK,TOIE1)    // Enable timer1 overflow interrupt(TOIE1)
+    set_bit(TIMSK,TOIE1);    // Enable timer1 overflow interrupt(TOIE1)
 
     sei();
 
 }
 
-IRS(TIMER1_OVF_vect)
-{
+ISR(TIMER1_OVF_vect){
     ADC_start_conversion();
     struct ADC_data adc_data = ADC_get_data();
     joystick_position.x_pos = (adc_data.ch_0 - x_offset) * 200 / 231;
     joystick_position.y_pos = (adc_data.ch_1 - y_offset) * 200 / 231;
     left_slider = (adc_data.ch_2 - 100) * 100 / 231;
     right_slider = (adc_data.ch_3 - 100) * 100 / 231;
+    printf("x-pos: %i\r\n",joystick_position.x_pos);
 
-    TCNT1 = 65535-4800/60;  // 60 Hz timer?
-
+    TCNT1 = 65535-(F_CPU/1024)/60;  // 60 Hz refresh rate, reset timer
 
 }

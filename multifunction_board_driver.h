@@ -6,12 +6,12 @@
 struct joy_pos
 {
     int8_t x_pos;
-    int8_t y_pos
+    int8_t y_pos;
 };
 
-enum joy_dir{LEFT,RIGHT,UP,DOWN,NEUTRAL}
+enum joy_dir{LEFT,RIGHT,UP,DOWN,NEUTRAL};
 
-void joystick_init();
+void multifunction_board_init();
 
 void joystick_calibrate(void);
 
