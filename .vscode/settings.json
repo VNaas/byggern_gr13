@@ -7,7 +7,10 @@
         "macros.h": "c",
         "stdlib.h": "c",
         "inttypes.h": "c",
-        "sfr_defs.h": "c"
+        "sfr_defs.h": "c",
+        "oled_driver.h": "c",
+        "iotn20.h": "c",
+        "iotn10.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }
