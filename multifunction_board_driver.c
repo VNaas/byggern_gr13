@@ -69,7 +69,9 @@ void set_1024_prescaler(){
 }
 
 void multifunction_board_init(){
+
     clear_bit(DDRD,PB3);  // joystick button
+
 
     joystick_calibrate();
 
@@ -85,9 +87,11 @@ void multifunction_board_init(){
     // Enable interrupt on PD3 (INT1)
     set_bit(GICR,INT1);
 
+
     sei();
 
 }
+
 
 ISR(INT1_vect){
     printf("Button pressed\r\n");
@@ -100,6 +104,7 @@ ISR(TIMER1_OVF_vect){
     joystick_position.y_pos = (adc_data.ch_1 - y_offset) * 200 / 255;
     left_slider = (adc_data.ch_2) * 100 / 255;
     right_slider = (adc_data.ch_3) * 100 / 255;
+
 
     TCNT1 = 65535-(F_CPU/1024)/60;  // 60 Hz refresh rate, reset timer
 
