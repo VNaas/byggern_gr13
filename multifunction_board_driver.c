@@ -69,9 +69,10 @@ void set_1024_prescaler(){
 }
 
 void multifunction_board_init(){
-    clear_bit(DDRB,PB0);  // right button
-    clear_bit(DDRB,PB1);  // left button
-    clear_bit(DDRB,PB2);  // joystick_button
+
+    clear_bit(DDRD,PB3);  // joystick button
+
+
     joystick_calibrate();
 
     cli();
@@ -80,18 +81,30 @@ void multifunction_board_init(){
     set_1024_prescaler();
     set_bit(TIMSK,TOIE1);    // Enable timer1 overflow interrupt(TOIE1)
 
+    // Interrupt on rising edge PD3 (INT1)
+    set_bit(MCUCR,ISC10);
+    set_bit(MCUCR,ISC11);
+    // Enable interrupt on PD3 (INT1)
+    set_bit(GICR,INT1);
+
+
     sei();
 
+}
+
+
+ISR(INT1_vect){
+    printf("Button pressed\r\n");
 }
 
 ISR(TIMER1_OVF_vect){
     ADC_start_conversion();
     struct ADC_data adc_data = ADC_get_data();
-    joystick_position.x_pos = (adc_data.ch_0 - x_offset) * 200 / 231;
-    joystick_position.y_pos = (adc_data.ch_1 - y_offset) * 200 / 231;
-    left_slider = (adc_data.ch_2 - 100) * 100 / 231;
-    right_slider = (adc_data.ch_3 - 100) * 100 / 231;
-    printf("x-pos: %i\r\n",joystick_position.x_pos);
+    joystick_position.x_pos = (adc_data.ch_0 - x_offset) * 200 / 255;
+    joystick_position.y_pos = (adc_data.ch_1 - y_offset) * 200 / 255;
+    left_slider = (adc_data.ch_2) * 100 / 255;
+    right_slider = (adc_data.ch_3) * 100 / 255;
+
 
     TCNT1 = 65535-(F_CPU/1024)/60;  // 60 Hz refresh rate, reset timer
 
