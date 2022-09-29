@@ -69,9 +69,9 @@ int main(void)
 {
 	USART_init(MYUBRR);
 	XMEM_init();
-	// SRAM_test();
+	SRAM_test();
 	ADC_init();
-	// // multifunction_board_init();
+	multifunction_board_init();
 	OLED_init();
 	int count = 0;
 
@@ -79,23 +79,21 @@ int main(void)
 
 	OLED_goto_line(0);
 	for(int i=0; i<127; i++){
-        OLED_write_data(0b00000000); 
+        OLED_write_data(0b11111111); 
     }
 	OLED_goto_line(2);
 	for(int i=0; i<127; i++){
-        OLED_write_data(0b00000000); 
+        OLED_write_data(0b11111111); 
     }
 	OLED_goto_line(4);
 	for(int i=0; i<127; i++){
-        OLED_write_data(0b00000000); 
+        OLED_write_data(0b11111111); 
     }
 	OLED_goto_line(6);
 	for(int i=0; i<127; i++){
-        OLED_write_data(0b00000000); 
+        OLED_write_data(0b11111111); 
     }
 	while(1){
-
-		
 		
 		if(count<7){
 			count++;
@@ -105,11 +103,10 @@ int main(void)
 		
 		_delay_ms(1000);
 		
-		OLED_set_brightness(0);
-		
+		OLED_set_brightness(1);
+		ADC_start_conversion();
 		_delay_ms(1000);
-		
-		OLED_set_brightness(255);
+		OLED_set_brightness(128);
 
 
 	}

@@ -16,6 +16,8 @@ volatile struct joy_pos joystick_position;
 volatile int left_slider;
 volatile int right_slider;
 
+volatile int button_flag = 0;
+
 struct joy_pos joystick_getPos(){
     return joystick_position;
 }
@@ -89,8 +91,18 @@ void multifunction_board_init(){
 
 }
 
+void OLED_print_arrow( uint8_t row , uint8_t col )
+{
+    OLED_pos( row , col );
+    OLED_write_data( 0b00011000 );
+    OLED_write_data( 0b00011000 );
+    OLED_write_data( 0b01111110 );
+    OLED_write_data( 0b00111100 );
+    OLED_write_data( 0b00011000 );
+}
+
 ISR(INT1_vect){
-    printf("Button pressed\r\n");
+    button_flag = 1;
 }
 
 ISR(TIMER1_OVF_vect){
