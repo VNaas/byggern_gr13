@@ -1,6 +1,11 @@
 #include "OLED_driver.h"
 #include "fonts.h"
+#include "macros.h"
 #include <ctype.h>
+#define F_CPU 4915200
+#include <util/delay.h>
+#include <avr/interrupt.h>
+#include <stdio.h>
 
 volatile char* cmd_ptr = (char*) OLED_COMMAND_BASE;
 volatile char* data_ptr = (char*) OLED_DATA_BASE;
@@ -99,21 +104,21 @@ void OLED_print(char* c){
     case 4:
         for(t = c; *t != '\0'; t++){
             for(int i = 0; i < fontsize; i++){
-                OLED_write_data( *(*(font4+*(t)-32))+i );
+                OLED_write_data(pgm_read_byte(&font4[*t - 32][i]));
             }
         }
         break;
     case 5:
         for(t = c; *t != '\0'; t++){
             for(int i = 0; i < fontsize; i++){
-                OLED_write_data( *(*(font5+*(t)-32))+i );
+                OLED_write_data(pgm_read_byte(&font5[*t - 32][i]));
             }
         }
         break;
     case 8:
         for(t = c; *t != '\0'; t++){
             for(int i = 0; i < fontsize; i++){
-                OLED_write_data( *(*(font8+*(t)-32))+i );
+                OLED_write_data(pgm_read_byte(&font8[*t - 32][i]));
             }
         }
         break;
