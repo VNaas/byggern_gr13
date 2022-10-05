@@ -13,4 +13,6 @@ init(){
 }
 
 
-ISR
+ISR(INT0_vect){
+    // READ CANINTF to see what triggered the interrupt on MCP
+}
