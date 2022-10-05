@@ -18,6 +18,15 @@ volatile int right_slider;
 
 volatile int button_flag = 0;
 
+int joystick_get_button_flag(){
+    return button_flag;
+}
+
+void joystick_reset_button_flag(){
+    button_flag = 0;
+}
+
+
 struct joy_pos joystick_getPos(){
     return joystick_position;
 }

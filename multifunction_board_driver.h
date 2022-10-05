@@ -11,6 +11,10 @@ struct joy_pos
 
 enum joy_dir{LEFT,RIGHT,UP,DOWN,NEUTRAL};
 
+int joystick_get_button_flag();
+
+void joystick_reset_button_flag();
+
 void multifunction_board_init();
 
 void joystick_calibrate(void);

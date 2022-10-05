@@ -79,30 +79,30 @@ int main(void)
 
 	OLED_goto_line(0);
 	for(int i=0; i<127; i++){
-        OLED_write_data(0b11111111); 
+        OLED_write_data(0b11111111);
     }
 	OLED_goto_line(2);
 	for(int i=0; i<127; i++){
-        OLED_write_data(0b11111111); 
+        OLED_write_data(0b11111111);
     }
 	OLED_goto_line(4);
 	for(int i=0; i<127; i++){
-        OLED_write_data(0b11111111); 
+        OLED_write_data(0b11111111);
     }
 	OLED_goto_line(6);
 	for(int i=0; i<127; i++){
-        OLED_write_data(0b11111111); 
+        OLED_write_data(0b11111111);
     }
 	while(1){
-		
+
 		if(count<7){
 			count++;
 		}
 		else{count=0;}
 
-		
+
 		_delay_ms(1000);
-		
+
 		OLED_set_brightness(1);
 		ADC_start_conversion();
 		_delay_ms(1000);
