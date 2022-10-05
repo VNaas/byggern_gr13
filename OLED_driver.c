@@ -62,7 +62,7 @@ void OLED_clear_line(uint8_t line){
     //assuming line equals page
     OLED_goto_line(line);
     for(int i=0; i<127; i++){
-        OLED_write_data(0b00000000); 
+        OLED_write_data(0b00000000);
     }
 }
 
@@ -71,7 +71,7 @@ void toBinary(uint8_t a)
     uint8_t i;
 
     for(i=0x80;i!=0;i>>=1)
-        printf("%c",(a&i)?'1':'0'); 
+        printf("%c",(a&i)?'1':'0');
 }
 void OLED_pos(uint8_t row, uint8_t col){
     OLED_write_command((0xB0 + row)); //
@@ -97,21 +97,21 @@ void OLED_print(char* c){
     switch (fontsize)
     {
     case 4:
-        for(t = c; *t != '\0'; t++){   
+        for(t = c; *t != '\0'; t++){
             for(int i = 0; i < fontsize; i++){
                 OLED_write_data( *(*(font4+*(t)-32))+i );
-            }        
+            }
         }
         break;
     case 5:
-        for(t = c; *t != '\0'; t++){   
+        for(t = c; *t != '\0'; t++){
             for(int i = 0; i < fontsize; i++){
                 OLED_write_data( *(*(font5+*(t)-32))+i );
             }
-        }    
+        }
         break;
     case 8:
-        for(t = c; *t != '\0'; t++){   
+        for(t = c; *t != '\0'; t++){
             for(int i = 0; i < fontsize; i++){
                 OLED_write_data( *(*(font8+*(t)-32))+i );
             }
