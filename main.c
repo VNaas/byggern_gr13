@@ -15,6 +15,7 @@
 #include "XMEM.h"
 #include "multifunction_board_driver.h"
 #include "OLED_driver.h"
+#include "menu.h"
 
 void SRAM_test(void)
 {
@@ -73,42 +74,28 @@ int main(void)
 	ADC_init();
 	multifunction_board_init();
 	OLED_init();
-	int count = 0;
 
 	OLED_reset();
-
-	OLED_goto_line(0);
-	for(int i=0; i<127; i++){
-        OLED_write_data(0b11111111);
-    }
-	OLED_goto_line(2);
-	for(int i=0; i<127; i++){
-        OLED_write_data(0b11111111);
-    }
-	OLED_goto_line(4);
-	for(int i=0; i<127; i++){
-        OLED_write_data(0b11111111);
-    }
-	OLED_goto_line(6);
-	for(int i=0; i<127; i++){
-        OLED_write_data(0b11111111);
-    }
+	menu();
 	while(1){
-
-		if(count<7){
-			count++;
-		}
-		else{count=0;}
-
-
+	OLED_print_arrow(0,0);
+	OLED_print_arrow(1,0);
+	OLED_print_arrow(2,0);
+	OLED_print_arrow(3,0);
+	OLED_print_arrow(4,0);
+	OLED_print_arrow(5,0);
+	OLED_print_arrow(6,0);
+	OLED_print_arrow(7,0);
 		_delay_ms(1000);
-
-		OLED_set_brightness(1);
-		ADC_start_conversion();
+	OLED_delete_arrow(0);
+	OLED_delete_arrow(1);
+	OLED_delete_arrow(2);
+	OLED_delete_arrow(3);
+	OLED_delete_arrow(4);
+	OLED_delete_arrow(5);
+	OLED_delete_arrow(6);
+	OLED_delete_arrow(7);
 		_delay_ms(1000);
-		OLED_set_brightness(128);
-
-
 	}
 	return 0;
 

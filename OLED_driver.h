@@ -32,4 +32,6 @@ void OLED_set_brightness(uint8_t level);
 
 void OLED_print_arrow(uint8_t row, uint8_t col);
 
+void OLED_delete_arrow(uint8_t row);
+
 #endif /* OLED_DRIVER_H */

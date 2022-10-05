@@ -11,7 +11,8 @@
         "oled_driver.h": "c",
         "iotn20.h": "c",
         "iotn10.h": "c",
-        "delay.h": "c"
+        "delay.h": "c",
+        "interrupt.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

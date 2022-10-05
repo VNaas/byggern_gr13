@@ -1,6 +1,5 @@
 #include "OLED_driver.h"
 #include "fonts.h"
-#include "macros.h"
 #include <ctype.h>
 #define F_CPU 4915200
 #include <util/delay.h>
@@ -126,7 +125,26 @@ void OLED_print(char* c){
         printf("Error printing character\r\n");
         break;
     }
-    // TODO: test
+}
+
+void OLED_print_arrow( uint8_t row , uint8_t col )
+{
+    OLED_pos( row , col );
+    OLED_write_data( 0b00011000 );
+    OLED_write_data( 0b00011000 );
+    OLED_write_data( 0b01111110 );
+    OLED_write_data( 0b00111100 );
+    OLED_write_data( 0b00011000 );
+}
+
+void OLED_delete_arrow(uint8_t row){
+    OLED_goto_line( row );
+    OLED_write_data( 0b00000000 );
+    OLED_write_data( 0b00000000 );
+    OLED_write_data( 0b00000000 );
+    OLED_write_data( 0b00000000 );
+    OLED_write_data( 0b00000000 );
+
 }
 
 void OLED_set_brightness(uint8_t level){

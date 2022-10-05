@@ -1,17 +1,17 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include "multifunction_board_driver.h"
 
-typedef int (*menu_function)(void);
-typedef struct
+typedef void (*menu_function)(void);
+typedef struct MenuNode
 {
     char *name;
     menu_function func;
-    struct node *parent;
-    struct node *children[8];
+    struct MenuNode *parent;
+    struct MenuNode *children[6];
     int numChildren;
-} menu_node;
+    int isMenu;
+}MenuNode;
 
 typedef enum
 {
@@ -24,35 +24,30 @@ typedef enum
 {
     CHANGE_BRIGHTNESS,
     SET_DIFFICULTY,
-    RETURN
+    SET_FONTSIZE,
+    SETTINGS_RETURN
 } settings_menu_t;
 
 typedef enum
 {
-    HIGH,
-    MEDIUM,
     LOW,
-    RETURN
-} brightness_menu_t;
-
-typedef enum
-{
-    HIGH,
     MEDIUM,
-    LOW,
-    RETURN
-} difficulty_menu_t;
+    HIGH,
+    LEVEL_RETURN
+} level_menu_t;
 
 void menu();
 
-menu_node *new_menu_node(char *_name, menu_node *_parent, void (*fun)());
+MenuNode *new_menu_node(char *_name, MenuNode *_parent, void (*_func)());
 
 /**
  * @brief Initializes main menu and all sub-menus and returns pointer to
  * main menu
- * 
- * @return menu_node* 
+ *
+ * @return MenuNode*
  */
-menu_node* init_menu();
+MenuNode *init_menu(void);
+int brightness_menu(void);
+
 
 #endif /* MENU_H */

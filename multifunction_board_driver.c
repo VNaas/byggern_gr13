@@ -32,10 +32,10 @@ struct joy_pos joystick_getPos(){
 }
 
 enum joy_dir joystick_get_direction(){
-    int threshold = 5;
+    int threshold = 10;
     int x = joystick_position.x_pos;
     int y = joystick_position.y_pos;
-    if ( x >= y){
+    if ( abs(x) >= abs(y)){
         if(x < - threshold ){
             return LEFT;
         }
@@ -43,7 +43,7 @@ enum joy_dir joystick_get_direction(){
             return RIGHT;
         }
     }
-    else if (x < y)
+    else if (abs(x) < abs(y))
     {
         if(y < - threshold ){
             return DOWN;
@@ -100,15 +100,7 @@ void multifunction_board_init(){
 
 }
 
-void OLED_print_arrow( uint8_t row , uint8_t col )
-{
-    OLED_pos( row , col );
-    OLED_write_data( 0b00011000 );
-    OLED_write_data( 0b00011000 );
-    OLED_write_data( 0b01111110 );
-    OLED_write_data( 0b00111100 );
-    OLED_write_data( 0b00011000 );
-}
+
 
 ISR(INT1_vect){
     button_flag = 1;

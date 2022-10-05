@@ -28,7 +28,6 @@ int slider_left_get_pos();
 int slider_right_get_pos();
 
 
-void joystick_getDir();
 
 
 #endif /* MULTIFUNCTION_BOEARD_DRIVER_H */
