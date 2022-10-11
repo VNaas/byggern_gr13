@@ -1,0 +1,18 @@
+{
+    "files.associations": {
+        "uart_driver.h": "c",
+        "stdio.h": "c",
+        "iom162.h": "c",
+        "io.h": "c",
+        "macros.h": "c",
+        "stdlib.h": "c",
+        "inttypes.h": "c",
+        "sfr_defs.h": "c",
+        "adc_driver.h": "c",
+        "joystick_driver.h": "c",
+        "interrupt.h": "c",
+        "multifunction_board_driver.h": "c",
+        "delay.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
+}

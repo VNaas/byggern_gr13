@@ -9,8 +9,8 @@ struct ADC_data
 {
     uint8_t ch_0;   // x dir
     uint8_t ch_1;   // y dir
-    uint8_t ch_2;   
-    uint8_t ch_3;
+    uint8_t ch_2;   // left slider
+    uint8_t ch_3;   // right slider
 };
 
 void ADC_init(void);
