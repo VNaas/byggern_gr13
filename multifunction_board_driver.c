@@ -16,15 +16,26 @@ volatile struct joy_pos joystick_position;
 volatile int left_slider;
 volatile int right_slider;
 
+volatile int button_flag = 0;
+
+int joystick_get_button_flag(){
+    return button_flag;
+}
+
+void joystick_reset_button_flag(){
+    button_flag = 0;
+}
+
+
 struct joy_pos joystick_getPos(){
     return joystick_position;
 }
 
 enum joy_dir joystick_get_direction(){
-    int threshold = 5;
+    int threshold = 10;
     int x = joystick_position.x_pos;
     int y = joystick_position.y_pos;
-    if ( x >= y){
+    if ( abs(x) >= abs(y)){
         if(x < - threshold ){
             return LEFT;
         }
@@ -32,7 +43,7 @@ enum joy_dir joystick_get_direction(){
             return RIGHT;
         }
     }
-    else if (x < y)
+    else if (abs(x) < abs(y))
     {
         if(y < - threshold ){
             return DOWN;
@@ -94,7 +105,7 @@ void multifunction_board_init(){
 
 
 ISR(INT1_vect){
-    printf("Button pressed\r\n");
+    button_flag = 1;
 }
 
 ISR(TIMER1_OVF_vect){

@@ -14,6 +14,8 @@
 #include "ADC_driver.h"
 #include "XMEM.h"
 #include "multifunction_board_driver.h"
+#include "OLED_driver.h"
+#include "menu.h"
 
 void SRAM_test(void)
 {
@@ -68,20 +70,32 @@ int main(void)
 {
 	USART_init(MYUBRR);
 	XMEM_init();
-	// SRAM_test();
+	SRAM_test();
 	ADC_init();
 	multifunction_board_init();
+	OLED_init();
+
+	OLED_reset();
+	menu();
 	while(1){
-			// printf("converting \n");
-
-			// ADC_start_conversion();
-			// struct ADC_data data = ADC_get_data();
-			// printf("Channel 0: %u \t", data.ch_0);
-			// printf("Channel 1: %u\r\n", data.ch_1);
-			// printf("Channel 2: %u\n", data.ch_2);
-			// printf("Channel 3: %u\n", data.ch_3);
-			_delay_ms(100);
-
+	OLED_print_arrow(0,0);
+	OLED_print_arrow(1,0);
+	OLED_print_arrow(2,0);
+	OLED_print_arrow(3,0);
+	OLED_print_arrow(4,0);
+	OLED_print_arrow(5,0);
+	OLED_print_arrow(6,0);
+	OLED_print_arrow(7,0);
+		_delay_ms(1000);
+	OLED_delete_arrow(0);
+	OLED_delete_arrow(1);
+	OLED_delete_arrow(2);
+	OLED_delete_arrow(3);
+	OLED_delete_arrow(4);
+	OLED_delete_arrow(5);
+	OLED_delete_arrow(6);
+	OLED_delete_arrow(7);
+		_delay_ms(1000);
 	}
 	return 0;
 
