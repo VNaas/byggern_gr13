@@ -17,7 +17,7 @@ void SPI_init()
     set_bit(SPCR, SPR0);    // clock rate f_osc/16
 
     set_bit(PORTB,PB4);     // *SS high
-    set_bit(SPCR,SRE);
+    set_bit(SPCR,SPE);      //SPI enable
 }
 
 char SPI_read()
@@ -30,4 +30,4 @@ char SPI_read()
 void SPI_write(char data){
     SPDR = data;
     loop_until_bit_is_set(SPSR, SPIF);
-} 
+}

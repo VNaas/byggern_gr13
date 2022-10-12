@@ -3,6 +3,7 @@
 #include <ctype.h>
 #define F_CPU 4915200
 #include <util/delay.h>
+#include <avr/io.h>
 #include <avr/interrupt.h>
 #include <stdio.h>
 

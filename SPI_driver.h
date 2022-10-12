@@ -6,3 +6,5 @@ void SPI_init();
 char SPI_read();
 
 void SPI_write(char data);
+
+#endif /*SPI_DRIVER_H*/

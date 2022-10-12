@@ -4,7 +4,6 @@
 
 #include <stdlib.h>
 #include "inttypes.h"
-#include <avr/io.h>
 
 
 #define OLED_COMMAND_BASE 0x1000
@@ -33,5 +32,7 @@ void OLED_set_brightness(uint8_t level);
 void OLED_print_arrow(uint8_t row, uint8_t col);
 
 void OLED_delete_arrow(uint8_t row);
+
+void toBinary(uint8_t a);
 
 #endif /* OLED_DRIVER_H */
