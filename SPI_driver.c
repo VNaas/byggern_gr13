@@ -6,17 +6,18 @@ void SPI_init()
 {
 
     /* Set slave select and SCK as output */
-    set_bit(DDRB, PB0); // *SS
-    set_bit(DDRB, PB0); // SCK
+    set_bit(DDRB, PB4); // *SS
+    set_bit(DDRB, PB7); // SCK
 
     // io pin directions
-    clear_bit(DDRB, PB0);   // MISO
-    set_bit(DDRB, PB0);     // MOSI
+    clear_bit(DDRB, PB6);   // MISO
+    set_bit(DDRB, PB5);     // MOSI
 
     set_bit(SPCR, MSTR);    // Set Master mode
     set_bit(SPCR, SPR0);    // clock rate f_osc/16
 
-    set_bit(PORTB,PB0);     // *SS high
+    set_bit(PORTB,PB4);     // *SS high
+    set_bit(SPCR,SRE);
 }
 
 char SPI_read()
