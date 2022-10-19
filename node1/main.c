@@ -18,6 +18,12 @@
 #include "menu.h"
 #include "CAN_driver.h"
 #include "SPI_driver.h"
+// #include <stdarg.h>
+// #include "uart_and_printf/uart.h"
+// #include "uart_and_printf/printf-stdarg.h"
+
+// #include "sam.h"
+
 
 void SRAM_test(void)
 {
@@ -77,38 +83,54 @@ int main(void)
 {
 	USART_init(MYUBRR);
 	XMEM_init();
-	// SRAM_test();
+	SRAM_test();
 	ADC_init();
 	multifunction_board_init();
 	OLED_init();
 	OLED_reset();
     CAN_init();
-	// menu();
+
+	// SystemInit();
+
+    // WDT->WDT_MR = WDT_MR_WDDIS; //Disable Watchdog Timer
+
+    // configure_uart();
+
+	menu();
 	CAN_message transmitMsg;
 	// transmitMsg.id = 4;
-	transmitMsg.data[0] = 'H';
-	transmitMsg.data[1] = 'e';
-	transmitMsg.data[2] = 'i';
+	transmitMsg.data[0] = 'B';
+	transmitMsg.data[1] = 'O';
+	transmitMsg.data[2] = 'Y';
 	transmitMsg.data[3] = '\0';
-	int counter = 0; 
+	// transmitMsg.data[4] = 'h';
+	// transmitMsg.data[5] = 'h';
+	// transmitMsg.data[6] = 'h';
+	// transmitMsg.data[7] = '\0';
+	transmitMsg.length = 4;
+	int counter = 0;
 	while (1)
 	{
 		// SPI_write(0b01010101);
 		counter = (counter +1 ) % 0xFF;
 		transmitMsg.id = counter;
 		printf("\r\n");
-		printf("Transmitting...\r\n");
+		// printf("Transmitting...\r\n");
 		CAN_transmit(transmitMsg);
 		if(CAN_getFlag())
 		{
-			printf("Received a CAN interrupt!!!!!!!!!\r\n");
+			// printf("Received a CAN interrupt!!!!!!!!!\r\n");
 			CAN_message receiveMsg = CAN_receive();
 			printf("Received: \r\n\t ID: %d\r\n\t",receiveMsg.id);
 			printf("Data: ");
+			char* p_c = receiveMsg.data;
+			// while (*p_c != '\0'){
+				// printf(*p_c);
+			// }
 			printf(receiveMsg.data);
 			printf("\r\n");
 		}
-		_delay_ms(2000);
+		_delay_ms(1000);
 	}
 	return 0;
 }

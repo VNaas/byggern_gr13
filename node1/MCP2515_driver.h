@@ -4,6 +4,11 @@
 #include "mcp2515.h"
 #include "inttypes.h"
 
+#define CNF1 0x2A
+#define CNF2 0x29
+#define CNF3 0x28
+
+
 uint8_t MCP2515_read(uint8_t address);
 
 void MCP2515_write(uint8_t address,uint8_t *data, uint8_t length);

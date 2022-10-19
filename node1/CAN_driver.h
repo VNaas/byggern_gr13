@@ -2,11 +2,13 @@
 #define CAN_DRIVER_H
 
 #include "avr/io.h"
+#include "inttypes.h"
 
 typedef struct CAN_message
 {
-    char id;
-    char data[8];
+    uint8_t id;
+    uint8_t data[8];
+    uint8_t length;
 }CAN_message;
 
 void CAN_init();

@@ -25,7 +25,7 @@ void MCP2515_write(uint8_t address, uint8_t *data, uint8_t length)
     clear_bit(PORTB, PB4);
     SPI_write(MCP_WRITE);
     SPI_write(address);
-    for(int i = 0; i < length ; i++)
+    for (int i = 0; i < length; i++)
     {
         // Get printed expected result in data and address
         SPI_write(data[i]);
@@ -46,6 +46,31 @@ void MCP2515_reset()
     _delay_ms(10);
 }
 
+#define BRP 0
+#define PRSEG 0
+#define PHSEG1 3
+#define PHSEG2 0
+#define BTL 7
+void MCP2512_setBaudRate()
+{
+    int8_t baud_conf = 0;
+    uint8_t cnf1_val;
+    uint8_t cnf2_val;
+    uint8_t cnf3_val;
+
+    cnf1_val |= 3 << BRP;     // Baud rate prescaler bits BRP<5:0> : 125 000
+
+    cnf2_val |= 1 << PRSEG;          // Propagation segment length 2* T_Q
+    cnf2_val |= 6 << PHSEG1;
+    cnf2_val |= 1 << BTL;
+
+    cnf3_val |= 5 << PHSEG2;
+
+    MCP2515_write(CNF1,&cnf1_val,1);
+    MCP2515_write(CNF2,&cnf2_val,1);
+    MCP2515_write(CNF3,&cnf3_val,1);
+}
+
 /**
  * @brief Initializes the CAN controller (and SPI), returning 0 on success, 1 if there is an issue
  *
@@ -63,6 +88,7 @@ uint8_t MCP2515_init()
         printf("MCP2515 is NOT in configuration mode after reset! \r\n");
         return 1;
     }
+
     return 0;
 }
 

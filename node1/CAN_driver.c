@@ -12,14 +12,14 @@ volatile int receiveFlag;
 
 void CAN_init(){
     MCP2515_init();
-
     MCP2515_bit_modify(0b11,MCP_RX_INT,MCP_CANINTE);   //enable all intrrupts
+    MCP2512_setBaudRate();
     
-    MCP2515_set_mode(MODE_LOOPBACK);
-    char value = MCP2515_read(MCP_CANSTAT);
-    if ((value & MODE_MASK) != MODE_LOOPBACK)
+    MCP2515_set_mode(MODE_NORMAL);
+    uint8_t value = MCP2515_read(MCP_CANSTAT);
+    if ((value & MODE_MASK) != MODE_NORMAL)
     {
-        printf("MCP2515 is NOT in loopback after can init! \r\n");
+        printf("MCP2515 is NOT in normal mode after can init! \r\n");
     }
     MCP2515_bit_modify(0b01100000, 0xff, MCP_RXB0CTRL); //11 = turn off filters
 
@@ -37,20 +37,15 @@ void CAN_init(){
 }
 
 void CAN_transmit(CAN_message msg){
-    char TX0ctrl = MCP2515_read(MCP_TXB0CTRL);
+    uint8_t TX0ctrl = MCP2515_read(MCP_TXB0CTRL);
     // probably overkill to check if we are ready for a new transmission
     // maybe check CANINTF.TXnIF
     while(1){
         if(!(TX0ctrl & 0b1000))
         {
             MCP2515_write(MCP_TXB0CTRL_ID,&msg.id,1);
-            MCP2515_write(MCP_TXB0CTRL_DLC,8,1);
-            MCP2515_write(MCP_TXB0CTRL_DATA,msg.data,8);
-            uint8_t _id = MCP2515_read(MCP_TXB0CTRL+1);
-            uint8_t _data[8];
-            for(int i = 0; i < 8; i++){
-                _data[i] = MCP2515_read(MCP_TXB0CTRL_DATA+i);
-            }
+            MCP2515_write(MCP_TXB0CTRL_DLC,&msg.length,1);
+            MCP2515_write(MCP_TXB0CTRL_DATA,&msg.data,msg.length);
             MCP2515_request_to_send(MCP_RTS_TX0);
             return;
         }
@@ -60,7 +55,7 @@ void CAN_transmit(CAN_message msg){
 CAN_message CAN_receive(){
     int buffer = MCP2515_read(MCP_CANINTF) && 0b11;
     CAN_message msg;
-    char bufAddress;
+    uint8_t bufAddress;
     switch (buffer)
     {
     case 0b01:
@@ -88,7 +83,6 @@ int CAN_getFlag()
 }
 
 ISR(INT0_vect){
-    // READ CANINTF to see what triggered the interrupt on MCP
     receiveFlag = 1;
 }
 
