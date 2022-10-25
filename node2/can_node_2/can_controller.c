@@ -24,7 +24,7 @@
  *
  * \retval Success(0) or failure(1)
  */
-uint8_t can_init_def_tx_rx_mb(uint32_t can_br)
+uint8_t can_init_def_tx_rx_mb()
 {
 	return can_init(0x00290165, 5, 2);
 }

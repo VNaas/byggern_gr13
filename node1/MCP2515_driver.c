@@ -58,17 +58,17 @@ void MCP2512_setBaudRate()
     uint8_t cnf2_val;
     uint8_t cnf3_val;
 
-    cnf1_val |= 3 << BRP;     // Baud rate prescaler bits BRP<5:0> : 125 000
+    cnf1_val |= 0x3 << BRP;     // Baud rate prescaler bits BRP<5:0> : 125 000
 
-    cnf2_val |= 1 << PRSEG;          // Propagation segment length 2* T_Q
-    cnf2_val |= 6 << PHSEG1;
-    cnf2_val |= 1 << BTL;
+    cnf2_val |= 0x1 << PRSEG;   // Propagation segment length 2* T_Q
+    cnf2_val |= 0x6 << PHSEG1;
+    cnf2_val |= 0x1 << BTL;
 
-    cnf3_val |= 5 << PHSEG2;
+    cnf3_val |= 0x5 << PHSEG2;
 
-    MCP2515_write(CNF1,&cnf1_val,1);
-    MCP2515_write(CNF2,&cnf2_val,1);
-    MCP2515_write(CNF3,&cnf3_val,1);
+    MCP2515_write(MCP_CNF1,&cnf1_val,1);
+    MCP2515_write(MCP_CNF2,&cnf2_val,1);
+    MCP2515_write(MCP_CNF3,&cnf3_val,1);
 }
 
 /**

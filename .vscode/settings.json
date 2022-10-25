@@ -13,7 +13,11 @@
         "interrupt.h": "c",
         "multifunction_board_driver.h": "c",
         "delay.h": "c",
-        "oled_driver.h": "c"
+        "oled_driver.h": "c",
+        "can_controller.h": "c",
+        "can_interrupt.h": "c",
+        "printf-stdarg.h": "c",
+        "interrupt_sam_nvic.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }
