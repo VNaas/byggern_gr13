@@ -96,7 +96,7 @@ int main(void)
 
     // configure_uart();
 
-	menu();
+	// menu();
 	CAN_message transmitMsg;
 	// transmitMsg.id = 4;
 	transmitMsg.data[0] = 'B';
@@ -111,22 +111,16 @@ int main(void)
 	int counter = 0;
 	while (1)
 	{
-		// SPI_write(0b01010101);
 		counter = (counter +1 ) % 0xFF;
 		transmitMsg.id = counter;
-		printf("\r\n");
-		// printf("Transmitting...\r\n");
+		printf("Transmitting\r\n");
 		CAN_transmit(transmitMsg);
 		if(CAN_getFlag())
 		{
-			// printf("Received a CAN interrupt!!!!!!!!!\r\n");
 			CAN_message receiveMsg = CAN_receive();
 			printf("Received: \r\n\t ID: %d\r\n\t",receiveMsg.id);
 			printf("Data: ");
 			char* p_c = receiveMsg.data;
-			// while (*p_c != '\0'){
-				// printf(*p_c);
-			// }
 			printf(receiveMsg.data);
 			printf("\r\n");
 		}

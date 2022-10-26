@@ -6,19 +6,19 @@
 #include "LED.h"
 #include "sam.h"
 
-void test_can()
-{
-    CAN_MESSAGE msg;
-    while(1){
-        if(!can_receive(&msg)){
-            for(int i = 0; i< msg.data_length; i ++)
-            {
-                printf(msg.data[i]);
-            }
-            printf("\r\n");
-        }
-    }
-}
+// void test_can()
+// {
+//     CAN_MESSAGE msg;
+//     while(1){
+//         if(!can_receive(&msg,0)){
+//             for(int i = 0; i< msg.data_length; i ++)
+//             {
+//                 printf(msg.data[i]);
+//             }
+//             printf("\r\n");
+//         }
+//     }
+// }
 
 
 int main()
@@ -31,9 +31,20 @@ int main()
     LED_yellowOn();
     printf("Hello World\n\r");
     can_init_def_tx_rx_mb();
-    CAN_MESSAGE received_msg;
     while (1)
     {
-        if (!can_receive(&received_msg, ))
+    CAN_MESSAGE received_msg;
+        if (!can_receive(&received_msg, 0))
+        {
+            printf("Received something\n\r");
+            printf("\n\rData id: %d", received_msg.id);
+            printf("\n\rData length: %d\n\r", received_msg.data_length);
+            for(int i = 0; i < received_msg.data_length; i ++)
+            {
+                // printf("sgjklag");
+                printf("%d\n\r",received_msg.data[i]);
+            }
+            printf("\n\r");
+        }
     }
 }
