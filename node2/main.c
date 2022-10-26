@@ -15,9 +15,10 @@ int main()
     configure_uart();
     LED_init();
     LED_yellowOn();
+    LED_greenOn();
     printf("Hello World\n\r");
-    int baudRate = 100000;
-    can_init_def_tx_rx_mb(baudRate);
+    // int baudRate = 100000;
+    // can_init_def_tx_rx_mb(baudRate);
     while (1)
     {
         /* code */
