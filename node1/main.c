@@ -85,10 +85,10 @@ int main(void)
 	XMEM_init();
 	SRAM_test();
 	ADC_init();
-	multifunction_board_init();
 	OLED_init();
 	OLED_reset();
     CAN_init();
+	multifunction_board_init();
 
 	// SystemInit();
 
@@ -111,19 +111,19 @@ int main(void)
 	int counter = 0;
 	while (1)
 	{
-		counter = (counter +1 ) % 0xFF;
-		transmitMsg.id = counter;
-		printf("Transmitting\r\n");
-		CAN_transmit(transmitMsg);
-		if(CAN_getFlag())
-		{
-			CAN_message receiveMsg = CAN_receive();
-			printf("Received: \r\n\t ID: %d\r\n\t",receiveMsg.id);
-			printf("Data: ");
-			char* p_c = receiveMsg.data;
-			printf(receiveMsg.data);
-			printf("\r\n");
-		}
+		// counter = (counter +1 ) % 0xFF;
+		// transmitMsg.id = counter;
+		// printf("Transmitting\r\n");
+		// CAN_transmit(transmitMsg);
+		// if(CAN_getFlag())
+		// {
+		// 	CAN_message receiveMsg = CAN_receive();
+		// 	printf("Received: \r\n\t ID: %d\r\n\t",receiveMsg.id);
+		// 	printf("Data: ");
+		// 	char* p_c = receiveMsg.data;
+		// 	printf(receiveMsg.data);
+		// 	printf("\r\n");
+		// }
 		_delay_ms(1000);
 	}
 	return 0;

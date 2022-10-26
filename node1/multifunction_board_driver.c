@@ -6,17 +6,18 @@
 #include <util/delay.h>
 #include <stdio.h>
 #include <avr/interrupt.h>
+#include "CAN_driver.h"
 
-
-
+#define REFRESH_RATE 60
 volatile int x_offset;
 volatile int y_offset;
 
 volatile struct joy_pos joystick_position;
-volatile int left_slider;
-volatile int right_slider;
+volatile char left_slider;
+volatile char right_slider;
 
 volatile int button_flag = 0;
+
 
 int joystick_get_button_flag(){
     return button_flag;
@@ -87,7 +88,7 @@ void multifunction_board_init(){
     joystick_calibrate();
 
     cli();
-    TCNT1 = 65535-(F_CPU/1024)/60;  // 60 Hz refresh rate
+    TCNT1 = 65535-(F_CPU/1024)/REFRESH_RATE;  // 60 Hz refresh rate
     TCCR1A = 0b00000000;
     set_1024_prescaler();
     set_bit(TIMSK,TOIE1);    // Enable timer1 overflow interrupt(TOIE1)
@@ -100,6 +101,19 @@ void multifunction_board_init(){
 
 
     sei();
+
+}
+
+void send_joy_pos()
+{
+    CAN_message msg;
+    msg.id = 1;
+    msg.length = 2;
+    msg.data[0] = joystick_position.x_pos;
+    msg.data[1] = joystick_position.y_pos;
+    msg.data[2] = left_slider;
+    msg.data[3] = right_slider;
+    CAN_transmit(msg);
 
 }
 
@@ -116,7 +130,8 @@ ISR(TIMER1_OVF_vect){
     left_slider = (adc_data.ch_2) * 100 / 255;
     right_slider = (adc_data.ch_3) * 100 / 255;
 
+    send_joy_pos();
 
-    TCNT1 = 65535-(F_CPU/1024)/60;  // 60 Hz refresh rate, reset timer
+    TCNT1 = 65535-(F_CPU/1024)/REFRESH_RATE;  // reset timer
 
 }

@@ -9,20 +9,20 @@
 #define CNF3 0x28
 
 
-uint8_t MCP2515_read(uint8_t address);
+char MCP2515_read(char address);
 
-void MCP2515_write(uint8_t address,uint8_t *data, uint8_t length);
+void MCP2515_write(char address,char *data, char length);
 
-void MCP2515_set_mode(uint8_t mode);
+void MCP2515_set_mode(char mode);
 
 void MCP2515_reset();
 
-uint8_t MCP2515_init();
+char MCP2515_init();
 
-uint8_t MCP2515_read_status();
+char MCP2515_read_status();
 
-void MCP2515_bit_modify(uint8_t mask, uint8_t data, uint8_t address);
+void MCP2515_bit_modify(char mask, char data, char address);
 
-void MCP2515_request_to_send(uint8_t buffer);
+void MCP2515_request_to_send(char buffer);
 
 #endif /* MPC2515_DRIVER_H */

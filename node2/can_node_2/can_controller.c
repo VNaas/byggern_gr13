@@ -62,6 +62,8 @@ uint8_t can_init(uint32_t can_br, uint8_t num_tx_mb, uint8_t num_rx_mb)
 
 	// Disable interrupts on CANH and CANL pins
 	PIOA->PIO_IDR = PIO_PA8A_URXD | PIO_PA9A_UTXD;
+	// PIO_PA8A_URXD = PIO_PA8B_PWMH0 ????????????????
+	// WHY DO YOU DISABLE THE WRONG PINS??????????????
 
 	//Select CAN0 RX and TX in PIOA
 	uint32_t ul_sr = PIOA->PIO_ABSR;

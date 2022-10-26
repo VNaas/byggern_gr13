@@ -7,20 +7,20 @@
 #define F_CPU 4915200
 #include <util/delay.h>
 
-uint8_t MCP2515_read(uint8_t address)
+char MCP2515_read(char address)
 {
     clear_bit(PORTB, PB4);
 
     SPI_write(MCP_READ);
     SPI_write(address);
-    uint8_t result = SPI_read();
+    char result = SPI_read();
 
     set_bit(PORTB, PB4);
 
     return result;
 }
 
-void MCP2515_write(uint8_t address, uint8_t *data, uint8_t length)
+void MCP2515_write(char address, char *data, char length)
 {
     clear_bit(PORTB, PB4);
     SPI_write(MCP_WRITE);
@@ -33,7 +33,7 @@ void MCP2515_write(uint8_t address, uint8_t *data, uint8_t length)
     set_bit(PORTB, PB4);
 }
 
-void MCP2515_set_mode(uint8_t mode)
+void MCP2515_set_mode(char mode)
 {
     MCP2515_bit_modify(MODE_MASK, mode, MCP_CANCTRL);
 }
@@ -52,9 +52,9 @@ void MCP2515_reset()
 #define PHSEG2 0
 #define BTL 7
 
-// void toBinary(uint8_t a)
+// void toBinary(char a)
 // {
-//     uint8_t i;
+//     char i;
 
 //     for(i=0x80;i!=0;i>>=1)
 //         printf("%c",(a&i)?'1':'0');
@@ -63,14 +63,14 @@ void MCP2515_reset()
 void MCP2512_setBaudRate()
 {
     int8_t baud_conf = 0;
-    uint8_t cnf1_val = 0;
-    uint8_t cnf2_val = 0;
-    uint8_t cnf3_val = 0;
+    char cnf1_val = 0;
+    char cnf2_val = 0;
+    char cnf3_val = 0;
 
-    cnf1_val |= 0x3 << BRP;     // Baud rate prescaler bits BRP<5:0> : 125 000
+    cnf1_val |= 0x3 << BRP;     // Baud rate prescaler bits BRP<5:0>
 
-    cnf2_val |= 0x1 << PRSEG;   // Propagation segment length 2* T_Q
-    cnf2_val |= 0x6 << PHSEG1;  // 10110001
+    cnf2_val |= 0x1 << PRSEG;   // Propagation segment length
+    cnf2_val |= 0x6 << PHSEG1;
     cnf2_val |= 0x1 << BTL;
 
     cnf3_val |= 0x5 << PHSEG2; // 00000101
@@ -90,15 +90,15 @@ void MCP2512_setBaudRate()
 /**
  * @brief Initializes the CAN controller (and SPI), returning 0 on success, 1 if there is an issue
  *
- * @return uint8_t
+ * @return char
  */
-uint8_t MCP2515_init()
+char MCP2515_init()
 {
     SPI_init();
     MCP2515_reset();
 
     // self-test
-    uint8_t value = MCP2515_read(MCP_CANSTAT);
+    char value = MCP2515_read(MCP_CANSTAT);
     if ((value & MODE_MASK) != MODE_CONFIG)
     {
         printf("MCP2515 is NOT in configuration mode after reset! \r\n");
@@ -108,17 +108,17 @@ uint8_t MCP2515_init()
     return 0;
 }
 
-uint8_t MCP2515_read_status()
+char MCP2515_read_status()
 {
     clear_bit(PORTB, PB4);
     SPI_write(MCP_READ_STATUS);
-    uint8_t result = SPI_read();
+    char result = SPI_read();
     set_bit(PORTB, PB4);
 
     return result;
 }
 
-void MCP2515_bit_modify(uint8_t mask, uint8_t data, uint8_t address)
+void MCP2515_bit_modify(char mask, char data, char address)
 {
     clear_bit(PORTB, PB4);
 
@@ -135,7 +135,7 @@ void MCP2515_bit_modify(uint8_t mask, uint8_t data, uint8_t address)
  *
  * @param buffer
  */
-void MCP2515_request_to_send(uint8_t transmitBuffer)
+void MCP2515_request_to_send(char transmitBuffer)
 {
     clear_bit(PORTB, PB4);
     SPI_write(transmitBuffer);

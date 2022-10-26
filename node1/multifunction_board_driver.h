@@ -5,8 +5,8 @@
 #include "inttypes.h"
 struct joy_pos
 {
-    int8_t x_pos;
-    int8_t y_pos;
+    char x_pos;
+    char y_pos;
 };
 
 enum joy_dir{LEFT,RIGHT,UP,DOWN,NEUTRAL};

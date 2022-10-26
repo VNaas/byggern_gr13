@@ -6,13 +6,12 @@
 
 typedef struct CAN_message
 {
-    uint8_t id;
-    uint8_t data[8];
-    uint8_t length;
-}CAN_message;
+    char id;
+    char data[8];
+    char length;
+} CAN_message;
 
 void CAN_init();
-
 
 void CAN_transmit(CAN_message msg);
 

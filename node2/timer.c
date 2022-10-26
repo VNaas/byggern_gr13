@@ -31,6 +31,7 @@ void systick_timer_init()
     SysTick->VAL = 0;
     // Enable timer
     SysTick->CTRL |= 1 << SysTick_CTRL_ENABLE_Pos;
+    NVIC_EnableIRQ((IRQn_Type) SysTick_IRQn);
 }
 
 void _delay_us(int us)
@@ -44,7 +45,9 @@ void _delay_us(int us)
 
 void _delay_ms(int ms)
 {
-    count = US * ms;
+    printf("delaying\n\r");
+    count = 1000 * ms;
+    printf("count = %d\n\r", count);
     systick_timer_init();
     while (count != 0)
     {
@@ -54,12 +57,14 @@ void _delay_ms(int ms)
 /* Decrements counter. If reached zero, disable systick clock */
 void Systick_handler()
 {
+    printf("systick interrupt");
     if (count != 0)
     {
-        count--
+        count--;
     }
     else
     {
         SysTick -> CTRL = (SysTick ->CTRL) & ~(SysTick_CTRL_ENABLE_Msk);
     }
+    NVIC_ClearPendingIRQ(SysTick_IRQn);
 }
