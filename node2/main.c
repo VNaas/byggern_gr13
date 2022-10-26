@@ -39,7 +39,7 @@ int main()
         CAN_MESSAGE received_msg;
         if (!can_receive(&received_msg, 0))
         {
-            printf("hello");
+            printf("MSG ID: %d\n\r", received_msg.id);
             if (LEDon)
             {
                 LED_yellowOff();
