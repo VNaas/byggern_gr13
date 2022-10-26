@@ -6,6 +6,20 @@
 #include "LED.h"
 #include "sam.h"
 
+// void test_can()
+// {
+//     CAN_MESSAGE msg;
+//     while(1){
+//         if(!can_receive(&msg,0)){
+//             for(int i = 0; i< msg.data_length; i ++)
+//             {
+//                 printf("%c",msg.data[i]);
+//             }
+//             printf("\r\n");
+//         }
+//     }
+// }
+
 
 int main()
 {
@@ -15,13 +29,17 @@ int main()
     configure_uart();
     LED_init();
     LED_yellowOn();
-    LED_greenOn();
-    printf("Hello World\n\r");
-    // int baudRate = 100000;
-    // can_init_def_tx_rx_mb(baudRate);
-    while (1)
-    {
-        /* code */
+    printf("Hello World");
+    can_init_def_tx_rx_mb();
+    CAN_MESSAGE received_msg;
+    CAN_MESSAGE msg;
+    while(1){
+        if(!can_receive(&msg,0)){
+            for(int i = 0; i< msg.data_length; i ++)
+            {
+                printf("%d",msg.data[i]);
+            }
+    //         printf("\r\n");
+        }
     }
-    
 }

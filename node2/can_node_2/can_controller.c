@@ -24,9 +24,9 @@
  *
  * \retval Success(0) or failure(1)
  */
-uint8_t can_init_def_tx_rx_mb(uint32_t can_br)
+uint8_t can_init_def_tx_rx_mb()
 {
-	return can_init(can_br, 1, 2);
+	return can_init(0x00290165, 5, 2);
 }
 
 /**
@@ -205,4 +205,3 @@ uint8_t can_receive(CAN_MESSAGE* can_msg, uint8_t rx_mb_id)
 		return 1;
 	}
 }
-
