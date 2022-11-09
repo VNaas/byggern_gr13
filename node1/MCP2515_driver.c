@@ -74,12 +74,12 @@ void MCP2512_setBaudRate()
     cnf2_val |= 0x1 << BTL;
 
     cnf3_val |= 0x5 << PHSEG2; // 00000101
-    printf("\r\n");
-    toBinary(cnf1_val);
-    printf("\r\n");
-    toBinary(cnf2_val);
-    printf("\r\n");
-    toBinary(cnf3_val);
+    // printf("\r\n");
+    // toBinary(cnf1_val);
+    // printf("\r\n");
+    // toBinary(cnf2_val);
+    // printf("\r\n");
+    // toBinary(cnf3_val);
 
 
     MCP2515_write(MCP_CNF1,&cnf1_val,1);

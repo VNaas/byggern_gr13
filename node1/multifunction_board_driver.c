@@ -17,6 +17,7 @@ volatile char left_slider;
 volatile char right_slider;
 
 volatile int button_flag = 0;
+volatile int send = 0;
 
 
 int joystick_get_button_flag(){
@@ -117,6 +118,15 @@ void send_joy_pos()
 
 }
 
+void joystick_start_sending()
+{
+    send = 1;
+}
+
+joystick_stop_sending()
+{
+    send = 0;
+}
 
 ISR(INT1_vect){
     button_flag = 1;
@@ -129,8 +139,9 @@ ISR(TIMER1_OVF_vect){
     joystick_position.y_pos = (adc_data.ch_1 - y_offset) * 200 / 255;
     left_slider = (adc_data.ch_2) * 100 / 255;
     right_slider = (adc_data.ch_3) * 100 / 255;
-
-    send_joy_pos();
+    // printf("x_pos: %d \r\n",joystick_position.x_pos);
+    if(send) send_joy_pos();
+    printf("joy_pos sent: %d\r\n", joystick_position.x_pos);
 
     TCNT1 = 65535-(F_CPU/1024)/REFRESH_RATE;  // reset timer
 

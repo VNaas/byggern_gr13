@@ -83,12 +83,11 @@ int main(void)
 {
 	USART_init(MYUBRR);
 	XMEM_init();
-	SRAM_test();
+	// SRAM_test();
 	ADC_init();
 	OLED_init();
 	OLED_reset();
     CAN_init();
-	multifunction_board_init();
 
 	// SystemInit();
 
@@ -96,19 +95,22 @@ int main(void)
 
     // configure_uart();
 
-	// menu();
-	CAN_message transmitMsg;
-	// transmitMsg.id = 4;
-	transmitMsg.data[0] = 'B';
-	transmitMsg.data[1] = 'O';
-	transmitMsg.data[2] = 'Y';
-	transmitMsg.data[3] = '\0';
-	// transmitMsg.data[4] = 'h';
-	// transmitMsg.data[5] = 'h';
-	// transmitMsg.data[6] = 'h';
-	// transmitMsg.data[7] = '\0';
-	transmitMsg.length = 4;
-	int counter = 0;
+	multifunction_board_init();
+	printf("Hello\r\n");
+	//menu();
+	joystick_start_sending();
+	// CAN_message transmitMsg;
+	// // transmitMsg.id = 4;
+	// transmitMsg.data[0] = 'B';
+	// transmitMsg.data[1] = 'O';
+	// transmitMsg.data[2] = 'Y';
+	// transmitMsg.data[3] = '\0';
+	// // transmitMsg.data[4] = 'h';
+	// // transmitMsg.data[5] = 'h';
+	// // transmitMsg.data[6] = 'h';
+	// // transmitMsg.data[7] = '\0';
+	// transmitMsg.length = 4;
+	// int counter = 0;
 	while (1)
 	{
 		// counter = (counter +1 ) % 0xFF;

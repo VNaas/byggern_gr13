@@ -6,7 +6,7 @@
  * For use in TTK4155 Embedded and Industrial Computer Systems Design
  * NTNU - Norwegian University of Science and Technology
  *
- */ 
+ */
 
 #include "can_interrupt.h"
 
@@ -16,21 +16,23 @@
 #include "../uart_and_printf/printf-stdarg.h"
 
 #include "can_controller.h"
+#include "../PWM.h"
+#include "../motor_driver.h"
 
-#define DEBUG_INTERRUPT 1
+#define DEBUG_INTERRUPT 0
 
 /**
  * \brief CAN0 Interrupt handler for RX, TX and bus error interrupts
  *
  * \param void
  *
- * \retval 
+ * \retval
  */
 void CAN0_Handler( void )
 {
 	if(DEBUG_INTERRUPT)printf("CAN0 interrupt\n\r");
-	char can_sr = CAN0->CAN_SR; 
-	
+	char can_sr = CAN0->CAN_SR;
+
 	//RX interrupt
 	if(can_sr & (CAN_SR_MB1 | CAN_SR_MB2) )//Only mailbox 1 and 2 specified for receiving
 	{
@@ -41,7 +43,7 @@ void CAN0_Handler( void )
 
 		}
 		else if(can_sr & CAN_SR_MB2) //Mailbox 2 event
-		
+
 		{
 			can_receive(&message, 2);
 		}
@@ -50,6 +52,15 @@ void CAN0_Handler( void )
 			printf("CAN0 message arrived in non-used mailbox\n\r");
 		}
 
+		switch (message.id)
+		{
+		case CAN_ID_JOY_POS:
+			set_PWM(message.data[1]);
+			control_motor_from_joy_pos(message.data[0]);
+			break;
+		default:
+			break;
+		}
 		if(DEBUG_INTERRUPT)printf("message id: %d\n\r", message.id);
 		if(DEBUG_INTERRUPT)printf("message data length: %d\n\r", message.data_length);
 		for (int i = 0; i < message.data_length; i++)
@@ -58,11 +69,11 @@ void CAN0_Handler( void )
 		}
 		if(DEBUG_INTERRUPT)printf("\n\r");
 	}
-	
+
 	if(can_sr & CAN_SR_MB0)
 	{
 		if(DEBUG_INTERRUPT) printf("CAN0 MB0 ready to send \n\r");
-		
+
 	//Disable interrupt
 		CAN0->CAN_IDR = CAN_IER_MB0;
 
@@ -78,7 +89,7 @@ void CAN0_Handler( void )
 		if(DEBUG_INTERRUPT)printf("CAN0 timer overflow\n\r");
 
 	}
-	
+
 	NVIC_ClearPendingIRQ(ID_CAN0);
 	//sei();*/
 }

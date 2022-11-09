@@ -1,14 +1,14 @@
 #include "PWM.h"
 #include "sam.h"
 
-#define MCK         84E6
+#define MCK 84E6
 
-#define PERIOD_A    20E-3
-#define DIVA        84
+#define PERIOD_A 20E-3
+#define DIVA 84
 // #define CLK_A       1E6
-#define CPRDA       (int) (PERIOD_A * MCK / DIVA)
-#define DIVB        84
-#define PWM_period(ms) ((int)(ms*84E6/(84*1000)))
+#define CPRDA (int)(PERIOD_A * MCK / DIVA)
+#define DIVB 84
+#define PWM_period(ms) ((int)(ms * 84E6 / (84 * 1000)))
 // #define CLK_B       1E6
 
 void PWM_init()
@@ -45,8 +45,6 @@ void PWM_init()
 
     // PWM->PWM_CH_NUM[5].PWM_CDTY = 63000; // (MCK * 0.0015) / X (Duty cycle 1.5ms is center position.)
 
-
-
     // enable peripheral function B for PIN45 and PIN44
     PIOC->PIO_ABSR |= PIO_PC19B_PWMH5 | PIO_PC18B_PWMH6;
 
@@ -74,8 +72,43 @@ void PWM_init()
     // PWM->PWM_CH_NUM[5].PWM_CPRD = PWM_CPRD_CPRD(CPRDA);
     PWM->PWM_CH_NUM[5].PWM_CDTY = PWM_period(1.5);
 
-    PWM->PWM_ENA = PWM_ENA_CHID5;// | PWM_ENA_CHID6;
+    PWM->PWM_ENA = PWM_ENA_CHID5; // | PWM_ENA_CHID6;
 
     PWM->PWM_IER1 = PWM_IER1_CHID0; // Enable Counter Event interrupts on channel 0
     // set PIN44 to not initially have a pulse
+}
+
+void set_PWM(int8_t joy_pos)
+{
+    // printf("joy_pos: %d\n\r", joy_pos);
+    int min_xpos = -128;
+    int max_xpos = 68;
+    double period;
+    if(abs(joy_pos) < 17) PWM->PWM_CH_NUM[5].PWM_CDTY = PWM_period(1.5);
+    if (joy_pos > 0)
+    {
+        period = (double)joy_pos / (2 * max_xpos) + 1.5;
+        if(period > 2.1) period =  2.1;
+    }
+    else
+    {
+        period = (double)joy_pos / (2 * abs(min_xpos)) + 1.5;
+        if(period < 0.9) period = 0.9;
+    }
+    PWM->PWM_CH_NUM[5].PWM_CDTY = PWM_period(period);
+    // // printf("???");
+    // if(period <= 0.9) printf("Period < 0.9");
+    // else if(period >= 0.9 && period < 1.0) printf("Period (, 0.9)\n\r");
+    // else if(period >= 1.0 && period < 1.1) printf("Period [1.0, 1.1)\n\r");
+    // else if(period >= 1.1 && period < 1.2) printf("Period [1.1, 1.2)\n\r");
+    // else if(period >= 1.2 && period < 1.3) printf("Period [1.2, 1.3) \n\r");
+    // else if(period >= 1.3 && period < 1.4) printf("Period [1.3, 1.4)\n\r");
+    // else if(period >= 1.4 && period < 1.5) printf("Period [1.4, 1.5)\n\r");
+    // else if(period >= 1.5 && period < 1.6) printf("Period [1.5, 1.6)\n\r");
+    // else if(period >= 1.6 && period < 1.7) printf("Period [1.6, 1.7)\n\r");
+    // else if(period >= 1.7 && period < 1.8) printf("Period [1.7, 1.8)\n\r");
+    // else if(period >= 1.8 && period < 1.9) printf("Period [1.8, 1.9)\55-2.75 n\r");
+    // else if(period >= 1.9 && period < 2.0) printf("Period [1.9, 2.0)\n\r");
+    // else if(period >= 2.0 && period < 2.1) printf("Period [2.0, 2.1)\n\r");
+    // else if(period >= 2.1) printf("Period >= 2.1\n\r");
 }
