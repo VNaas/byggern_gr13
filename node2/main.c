@@ -3,13 +3,16 @@
 #include "uart_and_printf/uart.h"
 #include "uart_and_printf/printf-stdarg.h"
 #include "can_node_2/can_controller.h"
+#include "can_node_2/can_interrupt.h"
 #include "LED.h"
 #include "sam.h"
 #include "PWM.h"
 #include "ADC.h"
 #include "timer.h"
+#include "timerv2.h"
 #include "motor_driver.h"
 #include "DAC.h"
+#include "solenoid.h"
 
 // void test_can()
 // {
@@ -32,65 +35,39 @@ int main()
     WDT->WDT_MR = WDT_MR_WDDIS; // Disable Watchdog Timer
     configure_uart();
     LED_init();
-    LED_yellowOn();
     int LEDon = 1;
-    printf("Hello World\n\r");
+    // printf("Hello World\n\r");
     can_init_def_tx_rx_mb();
     PWM_init();
     ADC_init();
     motor_init();
     motor_enable();
-
-
+    solenoid_init();
+    LED_greenOff();
+    LED_yellowOff();
     int position;
-
-    //control_motor_from_joy_pos(35);
-
-    // uint16_t test;
-    // test = 4096;
-
-
-    // printf("setting motor speed: \n\r");
-    // set_motor_speed(test);
-
-
-
+    CAN_MESSAGE msg;
 
     while (1)
     {
-
-        position = read_decoder();
-        printf("pos: %d\n\r", position);
-         _delay_ms(1000);
-        // printf("Hadet \n\r");
-        // _delay_us(1000);
-        // printf("Hei \n\r");
-        // CAN_MESSAGE received_msg;
-        // if (!can_receive(&received_msg, 0))
+        // if (get_joy_pos_flag())
         // {
-        //     printf("MSG ID: %d\n\r", received_msg.id);
-        //     if (LEDon)
-        //     {
-        //         LED_yellowOff();
-        //         LEDon = 0;
-        //     }
-        //     else
-        //     {
-        //         LED_yellowOn();
-        //         LEDon = 1;
-        //     }
+        //     // printf("joy_pos\n\r");
+        //     LED_yellowOn();
+        //     msg = get_can_message();
+        //     set_PWM(msg.data[1]);
+        //     control_motor_from_joy_pos(msg.data[0]);
+        //     clear_joy_pos_flag();
         // }
-        // if (!can_receive(&received_msg, 1))
+        // if(get_btn_flag())
         // {
-        //     printf("\n\rData id: %d", received_msg.id);
-        //     printf("\n\rData length: %d\n\r", received_msg.data_length);
-        //     for (int i = 0; i < received_msg.data_length; i++)
-        //     {
-        //         // printf("sgjklag");
-        //         printf("%d\n\r", received_msg.data[i]);
-        //     }
-        //     printf("\n\r");
+        //     printf("btn\n\r");
+        //     trigger_solenoid();
+        //     clear_btn_flag();
         // }
-        // // printf("Im not stuck\n\r");
+        LED_toggleYellow();
+        LED_toggleYellow();
+        printf("Yo\n\r");
+        _delay_ms(1000);
     }
 }

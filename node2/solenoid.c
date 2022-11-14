@@ -1,6 +1,7 @@
 #include "solenoid.h"
 #include "sam.h"
-
+#include "timer.h"
+#include "LED.h"
 void solenoid_init(){
     //enable A0 pin on shield as ouput
     PIOA->PIO_PER |= PIO_PA16;
@@ -11,11 +12,14 @@ void solenoid_init(){
 }
 
 void trigger_solenoid(){
-    //give solenois a pulse by setting the pin low for some time
-    PIOA->PIO_CODR |=  PIO_PA16;
-    _delay_ms(100);
-    //back to high
-    PIOA-> PIO_SODR |= PIO_PA16;
+    //give solenoid a pulse by setting the pin low for some time
+    PIOA-> PIO_CODR |= PIO_PA16;
+    LED_yellowOn();
+    _delay_ms(500);
+    LED_yellowOff();
+    // printf("Yo\n\r");
+    // //back to high
+     PIOA->PIO_SODR |=  PIO_PA16;
 
-    //call this function on button interrupt somehow? Are we sending that through can? don't think so, but I think we need to.
+
 }

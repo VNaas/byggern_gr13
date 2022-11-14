@@ -24,8 +24,7 @@ void systick_timer_init()
 
     // Reset current value
     SysTick->VAL = 0;
-    // SysTick->CTRL |= 1 << SysTick_CTRL_CLKSOURCE_Pos;
-    // SysTick->CTRL |= 1 << SysTick_CTRL_TICKINT_Pos;
+
     // set SysTick timer to MCK
     // Enable interrupt
     // Enable timer
@@ -47,9 +46,9 @@ void _delay_us(int us)
 
 void _delay_ms(int ms)
 {
-    printf("delaying\n\r");
+    // printf("delaying\n\r");
     us_ticks = 1000 * ms;
-    printf("count = %d\n\r", us_ticks);
+    // printf("count = %d\n\r", us_ticks);
     systick_timer_init();
     while (us_ticks);
 }
@@ -57,18 +56,15 @@ void _delay_ms(int ms)
 /* Decrements counter. If reached zero, disable systick clock */
 void SysTick_Handler( void )
 {
-    // printf("systick interrupt");
     if (us_ticks != 0)
     {
-        // printf("Decrementing\n\r");
         us_ticks--;
-        // printf("us_ticks: %d \n\r", us_ticks);
     }
-    // else
-    // {
-    //     printf("us_ticks = 0 \n\r");
-    //     SysTick -> CTRL = (SysTick ->CTRL) & ~(SysTick_CTRL_ENABLE_Msk  |
-    //                                             SysTick_CTRL_TICKINT_Msk);
-    // }
+    else
+    {
+
+        SysTick -> CTRL = (SysTick ->CTRL) & ~(SysTick_CTRL_ENABLE_Msk  |
+                                                SysTick_CTRL_TICKINT_Msk);
+    }
     // NVIC_ClearPendingIRQ(SysTick_IRQn);
 }

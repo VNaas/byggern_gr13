@@ -5,7 +5,7 @@ void LED_init();
 
 void LED_yellowOn();
 
-void LED_yellowOff();
+void LED_toggleYellow();
 
 void LED_yellowOff();
 
