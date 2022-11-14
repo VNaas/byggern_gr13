@@ -8,7 +8,7 @@
 #include <avr/interrupt.h>
 #include "CAN_driver.h"
 
-#define REFRESH_RATE 60
+#define REFRESH_RATE 30
 volatile int x_offset;
 volatile int y_offset;
 
@@ -130,6 +130,13 @@ joystick_stop_sending()
 
 ISR(INT1_vect){
     button_flag = 1;
+
+    CAN_message msg;
+    msg.id = 2;
+    msg.length = 1;
+    msg.data[0] = 1;
+
+    CAN_transmit(msg);
 }
 
 ISR(TIMER1_OVF_vect){
