@@ -39,12 +39,14 @@ void motor_init(void)
 void motor_enable()
 {
     PIOD->PIO_SODR = EN;
+    printf("motor enabled\n\r");
 }
 
 void motor_disable()
 {
     set_motor_speed(0);
     PIOD->PIO_CODR |= EN;
+    printf("motor disabled\n\r");
 }
 
 void set_motor_speed(uint16_t value)

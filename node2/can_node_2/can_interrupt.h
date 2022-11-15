@@ -14,7 +14,8 @@
 #define CAN_ID_JOY_POS 13
 #define CAN_ID_JOY_DIR
 #define CAN_ID_BTN_PRESS 21
-#define CAN_ID_MOTOR_ENABLE 55 //to be changed FIX!!!!!!
+#define CAN_ID_MOTOR_ENABLE 5 //TODO: to be changed FIX!!!!!!
+#define CAN_ID_MOTOR_DISABLE 17
 
 void CAN0_Handler       ( void );
 

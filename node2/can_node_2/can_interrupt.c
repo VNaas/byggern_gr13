@@ -78,8 +78,8 @@ void CAN0_Handler(void)
 		case CAN_ID_JOY_POS:
 			LED_toggleYellow();
 			joy_pos_flag = 1;
-			// set_PWM(message.data[1]);
-			// control_motor_from_joy_pos(message.data[0]);
+			set_PWM(message.data[1]);
+			control_motor_from_joy_pos(message.data[0]);
 			can_message = message;
 			break;
 
@@ -89,17 +89,17 @@ void CAN0_Handler(void)
 			break;
 
 		case CAN_ID_MOTOR_ENABLE: //this has the wrong value in can_interrupt.h
-			if (message.data[0] == 1){
-				motor_enable();
-			}
-			else{
-				motor_disable();
-			}
+			printf("motor enable/disable can msg: %d\n\r", message.data[0]);
+
+			motor_enable();
+
+			break;
+		case CAN_ID_MOTOR_DISABLE:
+			motor_disable();
 			break;
 
-
 		default:
-			printf("can message id: %d", message.id);
+			printf("can message id: %d\n\r", message.id);
 			break;
 		}
 		if (DEBUG_INTERRUPT)
