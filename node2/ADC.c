@@ -3,6 +3,7 @@
 #include "toBinary.h"
 #include "can_node_2/can_controller.h"
 
+int first_msg = 1;
 static int score = 0;
 void ADC_init()
 {
@@ -44,7 +45,15 @@ void ADC_Handler(void)
         IR_interrupted->id = 11;
         IR_interrupted->data_length = 1;
         IR_interrupted->data[0] = 1;
-        can_send(IR_interrupted, 1);
+        if (first_msg){
+            first_msg = 0;
+        }
+        else{
+            if(can_send(IR_interrupted, 1))
+            {
+                printf("Could not send IR CAN message\n\r");
+            }
+        }   
 
         //printf("%d\r\n",val);
     }

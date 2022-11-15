@@ -28,8 +28,9 @@ void show_high_scores(void)
     return;
 }
 
-void play_game()
+void play()
 {
+    play_game();
     return;
 }
 
@@ -79,16 +80,16 @@ void print_menu(MenuNode *menu)
 MenuNode *init_menu()
 {
     MenuNode *mainMenuNode = new_menu_node("Main Menu", NULL, NULL);
-    MenuNode *playGameNode = new_menu_node("Play Game", mainMenuNode, &play_game);
+    MenuNode *playGameNode = new_menu_node("Play Game", mainMenuNode, &play);
     MenuNode *settingsNode = new_menu_node("Settings", mainMenuNode, NULL);
     MenuNode *highscoresNode = new_menu_node("Display Highscores", mainMenuNode, show_high_scores);
 
-    MenuNode *brightnessNode = new_menu_node("Brightness", settingsNode, NULL);
-    MenuNode *difficultyNode = new_menu_node("Set Difficulty", settingsNode, NULL);
-    MenuNode *fontSizeNode = new_menu_node("Set font size", settingsNode, NULL);
+    MenuNode *brightnessNode = new_menu_node("Set Brightness", settingsNode, NULL);
+    //MenuNode *difficultyNode = new_menu_node("Set Difficulty", settingsNode, NULL);
+    //MenuNode *fontSizeNode = new_menu_node("Set font size", settingsNode, NULL);
 
     MenuNode *lowBrightnessNode = new_menu_node("Low", brightnessNode, &set_low_brightness);
-    // MenuNode *mediumBrightnessNode = new_menu_node("Medium", brightnessNode, &set_low_brightness);
+    MenuNode *mediumBrightnessNode = new_menu_node("Medium", brightnessNode, &set_low_brightness);
     MenuNode *highBrightnessNode = new_menu_node("High", brightnessNode, &set_low_brightness);
 
     // MenuNode *lowFontSizeNode = new_menu_node("Low", fontSizeNode, &set_low_brightness);
@@ -102,8 +103,8 @@ MenuNode *init_menu()
     mainMenuNode->isMenu = 1;
 
     settingsNode->children[CHANGE_BRIGHTNESS] = brightnessNode;
-    settingsNode->children[SET_DIFFICULTY] = difficultyNode;
-    settingsNode->children[SET_FONTSIZE] = fontSizeNode;
+    //settingsNode->children[SET_DIFFICULTY] = difficultyNode;
+    //settingsNode->children[SET_FONTSIZE] = fontSizeNode;
     settingsNode->numChildren = 3;
     settingsNode->isMenu = 1;
 
@@ -133,7 +134,6 @@ void menu()
     int counter = 0;
     printf("Number of children: %d\r\n",currentMenu->numChildren);
     OLED_print_arrow(choice + 1, 0);
-    printf("Printing arrow at %d\r\n",(choice+1));
     while (1)
     {
         dir = joystick_get_direction();

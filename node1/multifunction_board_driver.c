@@ -145,6 +145,7 @@ ISR(INT1_vect)
         msg.data[0] = 1;
 
         CAN_transmit(msg);
+        printf("button press sent\n\r");
     }
 
 }
@@ -171,8 +172,10 @@ ISR(TIMER1_OVF_vect)
     right_slider = (adc_data.ch_3) * 100 / 255;
     // printf("x_pos: %d \r\n",joystick_position.x_pos);
     if (send)
+    {
         send_joy_pos();
-    // printf("joy_pos sent: %d\r\n", joystick_position.x_pos);
+        //printf("joy_pos sent: %d\r\n", joystick_position.x_pos);
+    }
 
     TCNT1 = 65535 - (F_CPU / 1024) / REFRESH_RATE; // reset timer
 }
