@@ -2,41 +2,44 @@
 #include "sam.h"
 #include "sam/interrupt.h"
 #include "sam/interrupt/interrupt_sam_nvic.h"
-
-static us_ticks = 0;
+#define F_TC = 2.562E6
+static int ms_ticks = 0;
+static int initialized = 0;
 
 void timerv2_init()
 {
-    // // Disable Interrupts on PB25
-    // PIOB->PIO_IDR |= PIO_PB25A_RTS0;
-    
-    // Enable Peripheral B function on PB25
-    PIOB->PIO_ABSR |= PIO_PB25B_TIOA0;
-
-    // disable PIO from controlling PB25
-    PIOB->PIO_PDR |= PIO_PB25A_RTS0;
-
-    // enable clock for TC0
     PMC->PMC_PCR = PMC_PCR_EN | PMC_PCR_DIV_PERIPH_DIV_MCK | (ID_TC1 << PMC_PCR_PID_Pos);
-    PMC->PMC_PCER1 |= 1 << (ID_TC0 - 31);
+    PMC->PMC_PCER1 |= 1 << (ID_TC3 - 31);
+
+    TC1->TC_CHANNEL[0].TC_CMR |=    TC_CMR_WAVE | 
+                                    TC_CMR_WAVSEL_UP_RC |
+                                    TC_CMR_TCCLKS_TIMER_CLOCK3; // 2.652MHz 
+    TC1->TC_CHANNEL[0].TC_RC = (int)(F_TC / 1000 -1);
+    TC0->TC_CHANNEL[0].TC_CV = 0;
+    TC1->TC_CHANNEL[0].TC_IER = TC_IER_CPCS;
+    TC1->TC_CHANNEL[0].TC_IDR = ~TC_IER_CPCS;
+    NVIC_EnableIRQ(TC3_IRQn);
+
 }
 
-void timer_start_us()
-{
 
+void _delay_ms_v2(int ms)
+{
+    if(!initialized)
+    {
+        timerv2_init();
+        initialized = 1;
+    }
+    ms_ticks = ms;
     TC0->TC_CHANNEL[0].TC_CCR |= TC_CCR_CLKEN;
+    TC0->TC_CHANNEL[0].TC_CCR |= TC_CCR_SWTRG;
+    while(ms_ticks);
+    TC0->TC_CHANNEL[0].TC_CCR |= TC_CCR_CLKDIS;
+
+
 }
 
-void _delay_ms_v2(int ms);
-
-void _delay_us_v2(int us)
+void TC3_Handler(void)
 {
-    printf("Delaying\n\r");
-    TC0->TC_CHANNEL[0].TC_CV = 1;
-    TC0->TC_CHANNEL[0].TC_CCR |= TC_CCR_CLKEN;
-}
-
-void TC0_Handler(void)
-{
-    printf("Interrupt on TC0_Handler");
+    ms_ticks --;
 }
