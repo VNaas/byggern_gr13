@@ -20,6 +20,7 @@
 #include "../motor_driver.h"
 #include "../solenoid.h"
 #include "LED.h"
+
 #define DEBUG_INTERRUPT 0
 
 volatile CAN_MESSAGE can_message;
@@ -84,7 +85,19 @@ void CAN0_Handler(void)
 		case CAN_ID_BTN_PRESS:
 			btn_flag = 1;
             trigger_solenoid();
+			break;
+
+		case CAN_ID_MOTOR_ENABLE: //this has the wrong value in can_interrupt.h
+			if (message.data[0] == 1){
+				motor_enable();
+			}
+			else{
+				motor_disable();
+			}
+			break;
+
 		default:
+			printf("can message id: %d", message.id);
 			break;
 		}
 		if (DEBUG_INTERRUPT)

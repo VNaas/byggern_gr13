@@ -27,9 +27,9 @@ int slider_left_get_pos();
 
 int slider_right_get_pos();
 
-void joystick_start_sending();
+void multifunction_board_start_sending();
 
-void joystick_stop_sending();
+void multifunction_board_stop_sending();
 
 
 

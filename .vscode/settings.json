@@ -17,7 +17,8 @@
         "can_controller.h": "c",
         "can_interrupt.h": "c",
         "printf-stdarg.h": "c",
-        "interrupt_sam_nvic.h": "c"
+        "interrupt_sam_nvic.h": "c",
+        "can_driver.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }
