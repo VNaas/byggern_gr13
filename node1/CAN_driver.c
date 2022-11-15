@@ -53,6 +53,7 @@ void CAN_init()
 
 void CAN_transmit(CAN_message msg)
 {
+    printf("Can send: \n\r");
     char TX0ctrl = MCP2515_read(MCP_TXB0CTRL);
     char TX1ctrl = MCP2515_read(MCP_TXB1CTRL);
     char TX2ctrl = MCP2515_read(MCP_TXB2CTRL);

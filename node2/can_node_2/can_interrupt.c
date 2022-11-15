@@ -49,6 +49,7 @@ CAN_MESSAGE get_can_message() { return can_message; }
  */
 void CAN0_Handler(void)
 {
+	
 	if (DEBUG_INTERRUPT)
 		printf("CAN0 interrupt\n\r");
 	char can_sr = CAN0->CAN_SR;
@@ -74,16 +75,16 @@ void CAN0_Handler(void)
 		switch (message.id)
 		{
 		case CAN_ID_JOY_POS:
-			// printf("Joy msg\n\r");
+			LED_toggleYellow();
 			joy_pos_flag = 1;
-			set_PWM(message.data[1]);
-			control_motor_from_joy_pos(message.data[0]);
+			// set_PWM(message.data[1]);
+			// control_motor_from_joy_pos(message.data[0]);
 			can_message = message;
 			break;
 
 		case CAN_ID_BTN_PRESS:
 			btn_flag = 1;
-            trigger_solenoid();
+            // trigger_solenoid();
 		default:
 			break;
 		}
@@ -120,6 +121,6 @@ void CAN0_Handler(void)
 			printf("CAN0 timer overflow\n\r");
 	}
 
-	NVIC_ClearPendingIRQ(ID_CAN0);
+	NVIC_ClearPendingIRQ(CAN0_IRQn);
 	// sei();*/
 }

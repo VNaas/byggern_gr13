@@ -14,11 +14,13 @@ void LED_init()
 void LED_yellowOn()
 {
     PIOA->PIO_SODR = PIO_PA19;
+    yellowOn = 1;
 }
 
 void LED_yellowOff()
 {
     PIOA->PIO_CODR = PIO_PA19;
+    yellowOn = 0;
 }
 
 void LED_toggleYellow()
@@ -26,23 +28,25 @@ void LED_toggleYellow()
     if (yellowOn)
     {
         PIOA->PIO_CODR = PIO_PA19;
-        yellowOn = 1;
+        yellowOn = 0;
     }
     else
     {
         PIOA->PIO_SODR = PIO_PA19;
-        yellowOn = 0;
+        yellowOn = 1;
     }
 }
 
 void LED_greenOn()
 {
     PIOA->PIO_SODR = PIO_PA20;
+    greenOn = 1;
 }
 
 void LED_greenOff()
 {
     PIOA->PIO_CODR = PIO_PA20;
+    greenOn = 0;
 }
 
 void LED_toggleGreen()
@@ -50,11 +54,11 @@ void LED_toggleGreen()
     if (greenOn)
     {
         PIOA->PIO_CODR = PIO_PA20;
-        greenOn = 1;
+        greenOn = 0;
     }
     else
     {
         PIOA->PIO_SODR = PIO_PA20;
-        greenOn = 0;
+        greenOn = 1;
     }
 }

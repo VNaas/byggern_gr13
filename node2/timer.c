@@ -2,6 +2,7 @@
 #include "sam/sam3x/include/sam.h"
 #include "sam/interrupt.h"
 #include "sam/interrupt/interrupt_sam_nvic.h"
+#include "LED.h"
 
 #define F_CPU 84E6 // MCK = 84MHz
 #define US 1E6     // microseconds in a second
@@ -50,7 +51,8 @@ void _delay_ms(int ms)
     us_ticks = 1000 * ms;
     // printf("count = %d\n\r", us_ticks);
     systick_timer_init();
-    while (us_ticks);
+    while (us_ticks){}
+    LED_toggleGreen();
 }
 
 /* Decrements counter. If reached zero, disable systick clock */
@@ -62,9 +64,9 @@ void SysTick_Handler( void )
     }
     else
     {
-
         SysTick -> CTRL = (SysTick ->CTRL) & ~(SysTick_CTRL_ENABLE_Msk  |
                                                 SysTick_CTRL_TICKINT_Msk);
+        NVIC_DisableIRQ(SysTick_IRQn);
     }
-    // NVIC_ClearPendingIRQ(SysTick_IRQn);
+    NVIC_ClearPendingIRQ(SysTick_IRQn);
 }

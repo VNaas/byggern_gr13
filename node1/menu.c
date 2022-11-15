@@ -88,12 +88,12 @@ MenuNode *init_menu()
     MenuNode *fontSizeNode = new_menu_node("Set font size", settingsNode, NULL);
 
     MenuNode *lowBrightnessNode = new_menu_node("Low", brightnessNode, &set_low_brightness);
-    MenuNode *mediumBrightnessNode = new_menu_node("Medium", brightnessNode, &set_low_brightness);
+    // MenuNode *mediumBrightnessNode = new_menu_node("Medium", brightnessNode, &set_low_brightness);
     MenuNode *highBrightnessNode = new_menu_node("High", brightnessNode, &set_low_brightness);
 
-    MenuNode *lowFontSizeNode = new_menu_node("Low", fontSizeNode, &set_low_brightness);
-    MenuNode *mediumFontSizeNode = new_menu_node("Medium", fontSizeNode, &set_medium_brightness);
-    MenuNode *highFontSizeNode = new_menu_node("High", fontSizeNode, &set_high_brightness);
+    // MenuNode *lowFontSizeNode = new_menu_node("Low", fontSizeNode, &set_low_brightness);
+    // MenuNode *mediumFontSizeNode = new_menu_node("Medium", fontSizeNode, &set_medium_brightness);
+    // MenuNode *highFontSizeNode = new_menu_node("High", fontSizeNode, &set_high_brightness);
 
     mainMenuNode->children[PLAY_GAME] = playGameNode;
     mainMenuNode->children[SETTINGS] = settingsNode;
@@ -107,15 +107,15 @@ MenuNode *init_menu()
     settingsNode->numChildren = 3;
     settingsNode->isMenu = 1;
 
-    fontSizeNode->children[LOW] = lowFontSizeNode;
-    fontSizeNode->children[MEDIUM] = mediumFontSizeNode;
-    fontSizeNode->children[HIGH] = highFontSizeNode;
-    fontSizeNode->numChildren = 3;
+    // fontSizeNode->children[LOW] = lowFontSizeNode;
+    // fontSizeNode->children[MEDIUM] = mediumFontSizeNode;
+    // fontSizeNode->children[HIGH] = highFontSizeNode;
+    // fontSizeNode->numChildren = 3;
 
     brightnessNode->children[LOW] = lowBrightnessNode;
-    brightnessNode->children[MEDIUM] = mediumBrightnessNode;
+    // brightnessNode->children[MEDIUM] = mediumBrightnessNode;
     brightnessNode->children[HIGH] = highBrightnessNode;
-    brightnessNode->numChildren = 3;
+    brightnessNode->numChildren = 2;
     brightnessNode->isMenu = 1;
     return mainMenuNode;
 }

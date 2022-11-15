@@ -36,13 +36,14 @@ void ADC_Handler(void)
     if(adc_isr & ADC_ISR_COMPE){
         //printf("Comparison interrupt: \n\r");
         int val = ADC->ADC_CDR[0];
+        printf("ADC val: %d\n\r",val);
         //printf("%d\r\n",val);
     }
     else
     {
         // printf("No COMPE: %d\n\r", ADC->ADC_CDR[0]);
     }
-	// NVIC_ClearPendingIRQ(ID_ADC);
+	NVIC_ClearPendingIRQ(ID_ADC);
 }
 /* When a conversion is completed, the resulting 12-bit
 digital value is stored in the Channel Data Register

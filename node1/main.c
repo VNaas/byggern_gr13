@@ -97,7 +97,7 @@ int main(void)
 
 	multifunction_board_init();
 	printf("Hello\r\n");
-	//menu();
+	menu();
 	joystick_start_sending();
 	// CAN_message transmitMsg;
 	// // transmitMsg.id = 4;

@@ -65,9 +65,7 @@ int main()
         //     trigger_solenoid();
         //     clear_btn_flag();
         // }
-        LED_toggleYellow();
-        LED_toggleYellow();
-        printf("Yo\n\r");
-        _delay_ms(1000);
+        _delay_ms(100);
+        // LED_toggleGreen();
     }
 }
