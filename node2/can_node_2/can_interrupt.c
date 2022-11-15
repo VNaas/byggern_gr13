@@ -76,7 +76,7 @@ void CAN0_Handler(void)
 		switch (message.id)
 		{
 		case CAN_ID_JOY_POS:
-			LED_toggleYellow();
+			// LED_toggleYellow();
 			joy_pos_flag = 1;
 			// set_PWM(message.data[1]);
 			// control_motor_from_joy_pos(message.data[0]);

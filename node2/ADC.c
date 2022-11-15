@@ -1,7 +1,7 @@
 #include "ADC.h"
 #include "sam.h"
 #include "toBinary.h"
-#include "CAN_controller.h"
+#include "can_node_2/can_controller.h"
 
 static int score = 0;
 void ADC_init()
@@ -42,7 +42,7 @@ void ADC_Handler(void)
 
         CAN_MESSAGE IR_interrupted;
         IR_interrupted.id = 11;
-        IR_interrupted.length = 1;
+        IR_interrupted.data_length = 1;
         IR_interrupted.data[0] = 1;
 
         //printf("%d\r\n",val);

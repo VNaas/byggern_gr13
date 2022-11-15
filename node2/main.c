@@ -9,7 +9,6 @@
 #include "PWM.h"
 #include "ADC.h"
 #include "timer.h"
-#include "timerv2.h"
 #include "motor_driver.h"
 #include "DAC.h"
 #include "solenoid.h"
@@ -66,6 +65,6 @@ int main()
         //     clear_btn_flag();
         // }
         _delay_ms(100);
-        // LED_toggleGreen();
+        LED_toggleYellow();
     }
 }
