@@ -7,7 +7,7 @@
 #include "multifunction_board_driver.h"
 #include "OLED.h"
 
-#define IR_INTERRUPTED_ID 3
+#define IR_INTERRUPTED_ID 3 //some other value probably
 
 
 
@@ -45,11 +45,12 @@ void play_game(){
         }
         if(CAN_getFlag()){
             msg = CAN_receive();
-         if (msg){
-            if (msg.id == IR_INTERRUPTED_ID){
-                break;
+            if (msg){
+                printf("received can msg with id: %d", msg.id);
+                if (msg.id == IR_INTERRUPTED_ID){
+                    break;
+                }
             }
-        }
         }
 
     }

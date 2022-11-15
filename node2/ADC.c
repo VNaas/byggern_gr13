@@ -1,6 +1,7 @@
 #include "ADC.h"
 #include "sam.h"
 #include "toBinary.h"
+#include "CAN_controller.h"
 
 static int score = 0;
 void ADC_init()
@@ -36,6 +37,10 @@ void ADC_Handler(void)
     if(adc_isr & ADC_ISR_COMPE){
         //printf("Comparison interrupt: \n\r");
         int val = ADC->ADC_CDR[0];
+        CAN_MESSAGE IR_interrupted;
+        IR_interrupted.id = 11;
+        IR_interrupted.length = 1;
+        IR_interrupted.data[0] = 1;
         //printf("%d\r\n",val);
     }
     else
