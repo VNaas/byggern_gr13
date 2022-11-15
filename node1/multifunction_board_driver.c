@@ -124,12 +124,13 @@ void send_joy_pos()
     CAN_transmit(msg);
 }
 
-void joystick_start_sending()
+void multifunction_board_start_sending()
 {
     send = 1;
 }
 
-void joystick_stop_sending()
+
+void multifunction_board_stop_sending()
 {
     send = 0;
 }
@@ -137,13 +138,15 @@ void joystick_stop_sending()
 ISR(INT1_vect)
 {
     button_flag = 1;
+    if (send){
+        CAN_message msg;
+        msg.id = 2;
+        msg.length = 1;
+        msg.data[0] = 1;
 
-    CAN_message msg;
-    msg.id = 2;
-    msg.length = 1;
-    msg.data[0] = 1;
+        CAN_transmit(msg);
+    }
 
-    CAN_transmit(msg);
 }
 
 ISR(TIMER1_OVF_vect)
