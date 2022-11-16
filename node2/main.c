@@ -8,8 +8,8 @@
 #include "sam.h"
 #include "PWM.h"
 #include "ADC.h"
-// #include "timer.h"
-// #include "timerv2.h"
+#include "timer.h"
+#include "timer_v2.h"
 #include "motor_driver.h"
 #include "DAC.h"
 #include "solenoid.h"
@@ -78,7 +78,8 @@ int main()
                 break;
             }
         }
-
-        //read_decoder();
+        _delay_ms_v2(1000);
+        LED_toggleYellow();
+        read_decoder();
     }
 }

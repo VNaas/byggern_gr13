@@ -42,9 +42,9 @@ void _delay_us_v2(int us)
         ;
 }
 
-void _delay_ms_2(int ms)
+void _delay_ms_v2(int ms)
 {
-    _delay_us(1000*ms);
+    _delay_us_v2(1000*ms);
 }
 
 void TC3_Handler(void)
