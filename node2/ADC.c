@@ -11,6 +11,8 @@ void ADC_init()
     PMC->PMC_PCR |= PMC_PCR_EN | PMC_PCR_DIV_PERIPH_DIV_MCK | (ID_ADC << PMC_PCR_PID_Pos);
 	PMC->PMC_PCER1 |= 1 << (ID_ADC - 32);
 
+    //make pin input pin, maybe disable peripherals?
+    //PIOA -> PIO_ODR = PA16
 
     ADC->ADC_CR = ADC_CR_SWRST;
     ADC->ADC_IDR = ~(0ul);        // Disable all interrupts

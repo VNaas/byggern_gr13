@@ -47,33 +47,38 @@ int main()
     LED_yellowOff();
     int position;
     CAN_MESSAGE msg;
-
+    int busy = 1;
     while (1)
     {
-        if (get_joy_pos_flag())
+        busy = can_receive(&msg, 1);
+        if (!busy)
         {
-            LED_toggleYellow();
-            //printf("Hei\n\r");
-            // printf("joy_pos\n\r");
-            // LED_yellowOn();
-            // msg = get_can_message();
-            // set_PWM(msg.data[1]);
-            // control_motor_from_joy_pos(msg.data[0]);
-            // clear_joy_pos_flag();
+            switch (msg.id)
+            {
+            case CAN_ID_JOY_POS:
+                set_PWM(msg.data[1]);
+                control_motor_from_joy_pos(msg.data[0]);
+                break;
+
+            case CAN_ID_BTN_PRESS:
+                trigger_solenoid();
+                LED_toggleGreen();
+                break;
+
+            case CAN_ID_MOTOR_ENABLE:
+                motor_enable();
+                break;
+
+            case CAN_ID_MOTOR_DISABLE:
+                motor_disable();
+                break;
+
+            default:
+                printf("can message id: %d\n\r", msg.id);
+                break;
+            }
         }
-        // if (get_btn_flag())
-        // {
-        //     // printf("btn\n\r");
-        //     trigger_solenoid();
-        //     clear_btn_flag();
-        // }
-        // for (int i = 0; i < 100;)
-        // {
-        //     i++;
-        // }
-        // LED_toggleYellow();
-        // printf("Hei??\n\r");
-        
-        read_decoder();
+
+        //read_decoder();
     }
 }

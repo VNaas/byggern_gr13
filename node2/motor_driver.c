@@ -1,6 +1,7 @@
 #include "motor_driver.h"
 #include "sam.h"
 #include "timer.h"
+#include "toBinary.h"
 
 #define EN (1 << 9)
 #define DIR (1 << 10)
@@ -32,12 +33,16 @@ void motor_init(void)
     PIOC->PIO_PER |= ENCODER_DATA_PINS;
     PIOC->PIO_ODR |= ENCODER_DATA_PINS;
     PIOD->PIO_CODR |= NOT_RST;
+    _delay_us(20);
+    PIOD->PIO_SODR |= NOT_RST;
 
     // enable PIOC clock
     PMC->PMC_PCR = PMC_PCR_EN | PMC_PCR_DIV_PERIPH_DIV_MCK | (ID_PIOC << PMC_PCR_PID_Pos);
     PMC->PMC_PCR = PMC_PCR_EN | PMC_PCR_DIV_PERIPH_DIV_MCK | (ID_PIOD << PMC_PCR_PID_Pos);
     PMC->PMC_PCER0 |= 1 << (ID_PIOC);
     PMC->PMC_PCER0 |= 1 << (ID_PIOD);
+
+    toBinary((char)(PIOD->PIO_OSR &0xFF));
 }
 
 void motor_enable()
@@ -72,6 +77,7 @@ void set_motor_direction(enum motor_direction dir)
 
 int read_decoder()
 {
+
     // set !OE low to sample and hold the encoder value
     PIOD->PIO_CODR |= NOT_OE;
 
@@ -79,26 +85,29 @@ int read_decoder()
     PIOD->PIO_CODR |= SEL;
 
     // wait 20us for output to settle
-    _delay_count(10);
+    _delay_us(20);
 
+    // // read MJ2 to get high byte
+    uint32_t high_byte = (PIOC->PIO_PDSR & ENCODER_DATA_PINS) >> 1;
+    // // printf("high_byte: %d\n\r", high_byte);
 
-    // read MJ2 to get high byte
-    uint8_t high_byte = (PIOC->PIO_PDSR & ENCODER_DATA_PINS) >> 1;
-    // printf("high_byte: %d\n\r", high_byte);
-
-    // set SEL high to output low byte:
+    // // set SEL high to output low byte:
     PIOD->PIO_SODR |= SEL;
 
     // wait 20us for output to settle
-    //
-    _delay_count(10);
+    _delay_us(20);
 
-    // read MJ2 to get low value:
-    uint8_t low_byte = (PIOC->PIO_PDSR & ENCODER_DATA_PINS) >> 1;
-    // printf("low_byte: %d\n\r", low_byte);
+    // // read MJ2 to get low value:
+    uint32_t low_byte = (PIOC->PIO_PDSR & ENCODER_DATA_PINS) >> 1;
+    // // printf("low_byte: %d\n\r", low_byte);
+
+    // Reset encoder
+    // PIOD->PIO_CODR |= NOT_RST;
+    // _delay_us(20);
+    // PIOD->PIO_SODR |= NOT_RST;
 
     // set not_oe to high:
-    PIOD->PIO_SODR |= NOT_OE;
+    PIOD->PIO_SODR = NOT_OE;
 
     // combine high_byte and low_byte into result:
     uint16_t result = ((high_byte << 8) | low_byte);

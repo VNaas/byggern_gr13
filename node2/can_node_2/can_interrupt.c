@@ -21,7 +21,7 @@
 #include "../solenoid.h"
 #include "LED.h"
 
-#define DEBUG_INTERRUPT 0
+#define DEBUG_INTERRUPT 1
 
 volatile CAN_MESSAGE can_message;
 volatile int joy_pos_flag = 1;

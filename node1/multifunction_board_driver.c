@@ -8,7 +8,7 @@
 #include <avr/interrupt.h>
 #include "CAN_driver.h"
 
-#define REFRESH_RATE 2
+#define REFRESH_RATE 30
 volatile int x_offset;
 volatile int y_offset;
 volatile int button_delay = 0;

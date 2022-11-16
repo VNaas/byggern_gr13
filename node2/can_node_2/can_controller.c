@@ -92,7 +92,7 @@ uint8_t can_init(uint32_t can_br, uint8_t num_tx_mb, uint8_t num_rx_mb)
 		CAN0->CAN_MB[n].CAN_MMR = (CAN_MMR_MOT_MB_RX);
 		CAN0->CAN_MB[n].CAN_MCR |= CAN_MCR_MTCR;
 
-		can_ier |= 1 << n; //Enable interrupt on rx mailbox
+		// can_ier |= 1 << n; //Enable interrupt on rx mailbox
 	}
 
 	/*Configure transmit mailboxes */
@@ -105,10 +105,10 @@ uint8_t can_init(uint32_t can_br, uint8_t num_tx_mb, uint8_t num_rx_mb)
 	/****** End of mailbox configuraion ******/
 
 	//Enable interrupt on receive mailboxes
-	CAN0->CAN_IER = can_ier;
+	// CAN0->CAN_IER = can_ier;
 
 	//Enable interrupt in NVIC
-	NVIC_EnableIRQ(ID_CAN0);
+	// NVIC_EnableIRQ(ID_CAN0);
 
 	//enable CAN
 	CAN0->CAN_MR |= CAN_MR_CANEN;
