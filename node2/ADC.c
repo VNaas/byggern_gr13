@@ -20,7 +20,7 @@ void ADC_init()
 
     ADC->ADC_EMR |= ADC_EMR_CMPMODE_LOW |
                     ADC_EMR_CMPALL      |
-                    ADC_EMR_CMPFILTER(4);
+                    ADC_EMR_CMPFILTER(0);
 
     ADC->ADC_CWR = ADC_CWR_LOWTHRES(500); // Hopefully 1V threshold?
     ADC->ADC_CHER = ADC_CHER_CH0;
@@ -41,21 +41,12 @@ void ADC_Handler(void)
 
         printf("ADC val: %d\n\r",val);
 
-        CAN_MESSAGE *IR_interrupted;
-        IR_interrupted->id = 11;
-        IR_interrupted->data_length = 1;
-        IR_interrupted->data[0] = 1;
-        if (first_msg){
-            first_msg = 0;
-        }
-        else{
-            if(can_send(IR_interrupted, 1))
-            {
-                printf("Could not send IR CAN message\n\r");
-            }
-        }   
+        CAN_MESSAGE IR_interrupted;
+        IR_interrupted.id = 53;
+        IR_interrupted.data_length = 1;
+        IR_interrupted.data[0] = 1;
 
-        //printf("%d\r\n",val);
+        can_send(&IR_interrupted, 1); //TODO: få hjelp med denne
     }
     else
     {

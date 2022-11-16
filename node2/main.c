@@ -8,8 +8,8 @@
 #include "sam.h"
 #include "PWM.h"
 #include "ADC.h"
-#include "timer.h"
-#include "timerv2.h"
+// #include "timer.h"
+// #include "timerv2.h"
 #include "motor_driver.h"
 #include "DAC.h"
 #include "solenoid.h"
@@ -41,7 +41,7 @@ int main()
     PWM_init();
     ADC_init();
     motor_init();
-    motor_enable();
+    motor_disable();
     solenoid_init();
     LED_greenOff();
     LED_yellowOff();
@@ -50,22 +50,30 @@ int main()
 
     while (1)
     {
-        // if (get_joy_pos_flag())
+        if (get_joy_pos_flag())
+        {
+            LED_toggleYellow();
+            //printf("Hei\n\r");
+            // printf("joy_pos\n\r");
+            // LED_yellowOn();
+            // msg = get_can_message();
+            // set_PWM(msg.data[1]);
+            // control_motor_from_joy_pos(msg.data[0]);
+            // clear_joy_pos_flag();
+        }
+        // if (get_btn_flag())
         // {
-        //     // printf("joy_pos\n\r");
-        //     LED_yellowOn();
-        //     msg = get_can_message();
-        //     set_PWM(msg.data[1]);
-        //     control_motor_from_joy_pos(msg.data[0]);
-        //     clear_joy_pos_flag();
-        // }
-        // if(get_btn_flag())
-        // {
-        //     printf("btn\n\r");
+        //     // printf("btn\n\r");
         //     trigger_solenoid();
         //     clear_btn_flag();
         // }
-        _delay_ms(100);
-        // LED_toggleGreen();
+        // for (int i = 0; i < 100;)
+        // {
+        //     i++;
+        // }
+        // LED_toggleYellow();
+        // printf("Hei??\n\r");
+        
+        read_decoder();
     }
 }

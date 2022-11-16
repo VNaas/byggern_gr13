@@ -33,10 +33,9 @@ int get_btn_flag()
 }
 int get_joy_pos_flag()
 {
-	if (joy_pos_flag)
-		LED_greenOn();
 	return joy_pos_flag;
 }
+
 void clear_btn_flag() { btn_flag = 0; }
 void clear_joy_pos_flag() { joy_pos_flag = 0; }
 CAN_MESSAGE get_can_message() { return can_message; }
@@ -76,7 +75,7 @@ void CAN0_Handler(void)
 		switch (message.id)
 		{
 		case CAN_ID_JOY_POS:
-			LED_toggleYellow();
+			// LED_toggleYellow();
 			joy_pos_flag = 1;
 			set_PWM(message.data[1]);
 			control_motor_from_joy_pos(message.data[0]);
@@ -86,15 +85,15 @@ void CAN0_Handler(void)
 		case CAN_ID_BTN_PRESS:
 			btn_flag = 1;
             trigger_solenoid();
+			// printf("Button press\n\r");
+			LED_toggleGreen();
 			break;
 
-		case CAN_ID_MOTOR_ENABLE: //this has the wrong value in can_interrupt.h
-			printf("motor enable/disable can msg: %d\n\r", message.data[0]);
-
+		case CAN_ID_MOTOR_ENABLE:
 			motor_enable();
-
 			break;
-		case CAN_ID_MOTOR_DISABLE:
+
+		case CAN_ID_MOTOR_DISABLE: //this has the wrong value in can_interrupt.h
 			motor_disable();
 			break;
 

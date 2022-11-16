@@ -14,7 +14,6 @@
 
 #include "../uart_and_printf/printf-stdarg.h"
 
-
 /**
  * \brief Initialize can bus with predefined number of rx and tx mailboxes,
  * CAN0->CAN_MB[0] is used for transmitting
@@ -26,7 +25,7 @@
  */
 uint8_t can_init_def_tx_rx_mb()
 {
-	return can_init(0x00290165, 5, 2);
+	return can_init(0x00290165, 1, 2);
 }
 
 /**
@@ -40,7 +39,6 @@ uint8_t can_init_def_tx_rx_mb()
  *
  * \retval Success(0) or failure(1)
  */
-
 
 uint8_t can_init(uint32_t can_br, uint8_t num_tx_mb, uint8_t num_rx_mb)
 {
@@ -62,8 +60,6 @@ uint8_t can_init(uint32_t can_br, uint8_t num_tx_mb, uint8_t num_rx_mb)
 
 	// Disable interrupts on CANH and CANL pins
 	PIOA->PIO_IDR = PIO_PA8A_URXD | PIO_PA9A_UTXD;
-	// PIO_PA8A_URXD = PIO_PA8B_PWMH0 ????????????????
-	// WHY DO YOU DISABLE THE WRONG PINS??????????????
 
 	//Select CAN0 RX and TX in PIOA
 	uint32_t ul_sr = PIOA->PIO_ABSR;
@@ -110,9 +106,9 @@ uint8_t can_init(uint32_t can_br, uint8_t num_tx_mb, uint8_t num_rx_mb)
 
 	//Enable interrupt on receive mailboxes
 	CAN0->CAN_IER = can_ier;
-	NVIC_SetPriority(CAN0_IRQn,2);
+
 	//Enable interrupt in NVIC
-	NVIC_EnableIRQ(CAN0_IRQn);
+	NVIC_EnableIRQ(ID_CAN0);
 
 	//enable CAN
 	CAN0->CAN_MR |= CAN_MR_CANEN;
@@ -129,35 +125,35 @@ uint8_t can_init(uint32_t can_br, uint8_t num_tx_mb, uint8_t num_rx_mb)
  *
  * \retval Success(0) or failure(1)
  */
-uint8_t can_send(CAN_MESSAGE* can_msg, uint8_t tx_mb_id)
+uint8_t can_send(CAN_MESSAGE *can_msg, uint8_t tx_mb_id)
 {
-	//Check that mailbox is ready
-	if(CAN0->CAN_MB[tx_mb_id].CAN_MSR & CAN_MSR_MRDY)
+	// Check that mailbox is ready
+	if (CAN0->CAN_MB[tx_mb_id].CAN_MSR & CAN_MSR_MRDY)
 	{
-		//Set message ID and use CAN 2.0B protocol
-		CAN0->CAN_MB[tx_mb_id].CAN_MID = CAN_MID_MIDvA(can_msg->id) | CAN_MID_MIDE ;
+		// Set message ID and use CAN 2.0B protocol
+		CAN0->CAN_MB[tx_mb_id].CAN_MID = CAN_MID_MIDvA(can_msg->id) | CAN_MID_MIDE;
 
-		//Make sure message is not to long
-		if(can_msg->data_length > 7){
+		// Make sure message is not to long
+		if (can_msg->data_length > 7)
+		{
 			can_msg->data_length = 7;
-			//Message is to long, sending only the first 8 bytes
+			// Message is to long, sending only the first 8 bytes
 		}
-		//Put message in can data registers
+		// Put message in can data registers
 		CAN0->CAN_MB[tx_mb_id].CAN_MDL = can_msg->data[3] << 24 | can_msg->data[2] << 16 | can_msg->data[1] << 8 | can_msg->data[0];
 		CAN0->CAN_MB[tx_mb_id].CAN_MDH = can_msg->data[7] << 24 | can_msg->data[6] << 16 | can_msg->data[5] << 8 | can_msg->data[4];
 
-		//Set message length and mailbox ready to send
+		// Set message length and mailbox ready to send
 		CAN0->CAN_MB[tx_mb_id].CAN_MCR = (can_msg->data_length << CAN_MCR_MDLC_Pos) | CAN_MCR_MTCR;
 
 		printf("Ready to send \n\r");
 		return 0;
 	}
 
-	else //Mailbox busy
+	else // Mailbox busy
 	{
 		return 1;
 	}
-
 }
 
 /**
@@ -169,25 +165,25 @@ uint8_t can_send(CAN_MESSAGE* can_msg, uint8_t tx_mb_id)
  *
  * \retval Success(0) or failure(1)
  */
-uint8_t can_receive(CAN_MESSAGE* can_msg, uint8_t rx_mb_id)
+uint8_t can_receive(CAN_MESSAGE *can_msg, uint8_t rx_mb_id)
 {
-	//Check that mailbox is ready
-	if(CAN0->CAN_MB[rx_mb_id].CAN_MSR & CAN_MSR_MRDY)
+	// Check that mailbox is ready
+	if (CAN0->CAN_MB[rx_mb_id].CAN_MSR & CAN_MSR_MRDY)
 	{
-		//Get data from CAN mailbox
+		// Get data from CAN mailbox
 		uint32_t data_low = CAN0->CAN_MB[rx_mb_id].CAN_MDL;
 		uint32_t data_high = CAN0->CAN_MB[rx_mb_id].CAN_MDH;
 
-		//Get message ID
+		// Get message ID
 		can_msg->id = (uint16_t)((CAN0->CAN_MB[rx_mb_id].CAN_MID & CAN_MID_MIDvA_Msk) >> CAN_MID_MIDvA_Pos);
 
-		//Get data length
+		// Get data length
 		can_msg->data_length = (uint8_t)((CAN0->CAN_MB[rx_mb_id].CAN_MSR & CAN_MSR_MDLC_Msk) >> CAN_MSR_MDLC_Pos);
 
-		//Put data in CAN_MESSAGE object
-		for(int i = 0; i < can_msg->data_length;i++)
+		// Put data in CAN_MESSAGE object
+		for (int i = 0; i < can_msg->data_length; i++)
 		{
-			if(i < 4)
+			if (i < 4)
 			{
 				can_msg->data[i] = (char)(data_low & 0xff);
 				data_low = data_low >> 8;
@@ -199,14 +195,13 @@ uint8_t can_receive(CAN_MESSAGE* can_msg, uint8_t rx_mb_id)
 			}
 		}
 
-		//Reset for new receive
+		// Reset for new receive
 		CAN0->CAN_MB[rx_mb_id].CAN_MMR = CAN_MMR_MOT_MB_RX;
 		CAN0->CAN_MB[rx_mb_id].CAN_MCR |= CAN_MCR_MTCR;
 		return 0;
 	}
-	else //Mailbox busy
+	else // Mailbox busy
 	{
 		return 1;
 	}
 }
-

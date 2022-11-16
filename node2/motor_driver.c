@@ -1,5 +1,6 @@
 #include "motor_driver.h"
 #include "sam.h"
+#include "timer.h"
 
 #define EN (1 << 9)
 #define DIR (1 << 10)
@@ -30,10 +31,13 @@ void motor_init(void)
     // pin DO0-DO7 = pin 33-40 = PC1-PC8
     PIOC->PIO_PER |= ENCODER_DATA_PINS;
     PIOC->PIO_ODR |= ENCODER_DATA_PINS;
+    PIOD->PIO_CODR |= NOT_RST;
 
     // enable PIOC clock
     PMC->PMC_PCR = PMC_PCR_EN | PMC_PCR_DIV_PERIPH_DIV_MCK | (ID_PIOC << PMC_PCR_PID_Pos);
+    PMC->PMC_PCR = PMC_PCR_EN | PMC_PCR_DIV_PERIPH_DIV_MCK | (ID_PIOD << PMC_PCR_PID_Pos);
     PMC->PMC_PCER0 |= 1 << (ID_PIOC);
+    PMC->PMC_PCER0 |= 1 << (ID_PIOD);
 }
 
 void motor_enable()
@@ -74,22 +78,24 @@ int read_decoder()
     // set SEL low to output high byte
     PIOD->PIO_CODR |= SEL;
 
-    // wait 20ms for output to settle
-    _delay_us(20);
+    // wait 20us for output to settle
+    _delay_count(10);
+
 
     // read MJ2 to get high byte
     uint8_t high_byte = (PIOC->PIO_PDSR & ENCODER_DATA_PINS) >> 1;
-    printf("high_byte: %d\n\r", high_byte);
+    // printf("high_byte: %d\n\r", high_byte);
 
     // set SEL high to output low byte:
     PIOD->PIO_SODR |= SEL;
 
-    // wait 20ms for output to settle
-    _delay_us(20);
+    // wait 20us for output to settle
+    //
+    _delay_count(10);
 
     // read MJ2 to get low value:
     uint8_t low_byte = (PIOC->PIO_PDSR & ENCODER_DATA_PINS) >> 1;
-    printf("low_byte: %d\n\r", low_byte);
+    // printf("low_byte: %d\n\r", low_byte);
 
     // set not_oe to high:
     PIOD->PIO_SODR |= NOT_OE;
