@@ -2,6 +2,7 @@
 #include "sam.h"
 #include "toBinary.h"
 #include "can_node_2/can_controller.h"
+#include "LED.h"
 
 int first_msg = 1;
 static int score = 0;
@@ -48,7 +49,9 @@ void ADC_Handler(void)
         IR_interrupted.data_length = 1;
         IR_interrupted.data[0] = 1;
 
-        can_send(&IR_interrupted, 1); //TODO: få hjelp med denne
+        int busy = can_send(&IR_interrupted, 1); //TODO: få hjelp med denne
+
+        if(!busy) LED_toggleGreen();
     }
     else
     {
