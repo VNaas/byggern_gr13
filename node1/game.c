@@ -8,7 +8,7 @@
 #include "multifunction_board_driver.h"
 #include "OLED_driver.h"
 
-#define IR_INTERRUPTED_ID 3 //some other value probably
+#define IR_INTERRUPTED_ID 6 //some other value probably
 
 
 
@@ -20,13 +20,13 @@ void play_game(){
 
     //send can msg of motor enable
     CAN_message motor_enable;
-    motor_enable.id = 5;
+    motor_enable.id = 5; 
     motor_enable.length = 1;
     motor_enable.data[0] = 1;
+    CAN_transmit(motor_enable);
 
 
 
-    CAN_transmit(msg);
     multifunction_board_start_sending();
 
     OLED_reset();
@@ -34,17 +34,17 @@ void play_game(){
 	OLED_print("    LET'S PLAY    ");
 
     uint32_t seconds_lasted = 0;
-    uint8_t ms_from_second_increase = 0;
+    uint16_t ms_from_second_increase = 0;
 
 
     while (1)
     {
-        _delay_ms(1000);
+        _delay_ms(1);
         ms_from_second_increase ++;
         if(ms_from_second_increase == 1000){
             seconds_lasted ++;
             ms_from_second_increase = 0;
-            printf("a sec has passed\n\r");
+            // printf("a sec has passed\n\r");
         }
         if(CAN_getFlag()){
             msg = CAN_receive();

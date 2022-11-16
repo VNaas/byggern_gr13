@@ -30,6 +30,7 @@ void show_high_scores(void)
 
 void play()
 {
+    
     play_game();
     return;
 }

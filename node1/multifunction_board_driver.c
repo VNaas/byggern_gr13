@@ -8,9 +8,10 @@
 #include <avr/interrupt.h>
 #include "CAN_driver.h"
 
-#define REFRESH_RATE 5
+#define REFRESH_RATE 2
 volatile int x_offset;
 volatile int y_offset;
+volatile int button_delay = 0;
 
 volatile struct joy_pos joystick_position;
 volatile char left_slider;
@@ -129,7 +130,6 @@ void multifunction_board_start_sending()
     send = 1;
 }
 
-
 void multifunction_board_stop_sending()
 {
     send = 0;
@@ -137,17 +137,17 @@ void multifunction_board_stop_sending()
 
 ISR(INT1_vect)
 {
+    printf("button pressed\n\r");
     button_flag = 1;
-    if (send){
-        CAN_message msg;
-        msg.id = 2;
-        msg.length = 1;
-        msg.data[0] = 1;
+    // if (send){
+    //     CAN_message msg;
+    //     msg.id = 2;
+    //     msg.length = 1;
+    //     msg.data[0] = 1;
 
-        CAN_transmit(msg);
-        printf("button press sent\n\r");
-    }
-
+    //     CAN_transmit(msg);
+    //     printf("button press sent\n\r");
+    // }
 }
 
 ISR(TIMER1_OVF_vect)
@@ -174,7 +174,25 @@ ISR(TIMER1_OVF_vect)
     if (send)
     {
         send_joy_pos();
-        //printf("joy_pos sent: %d\r\n", joystick_position.x_pos);
+        // printf("joy_pos sent: %d\r\n", joystick_position.x_pos);
+        if (button_flag)
+        {
+            // if (!button_delay)
+            // {
+                button_flag = 0;
+                CAN_message button_msg;
+                button_msg.id = 2;
+                button_msg.length = 1;
+                button_msg.data[0] = 1;
+
+                CAN_transmit(button_msg);
+                printf("button press sent\n\r");
+                
+        //         button_delay = 10;
+        //     }
+        }
+        // if(button_delay)
+        //     button_delay--;
     }
 
     TCNT1 = 65535 - (F_CPU / 1024) / REFRESH_RATE; // reset timer
