@@ -113,15 +113,18 @@ void multifunction_board_init()
     sei();
 }
 
-void send_joy_pos()
+void send_joy_and_btn()
 {
     CAN_message msg;
     msg.id = 1;
-    msg.length = 2;
+    msg.length = 3;
     msg.data[0] = joystick_position.x_pos;
     msg.data[1] = joystick_position.y_pos;
-    msg.data[2] = left_slider;
-    msg.data[3] = right_slider;
+    msg.data[2] = button_flag;
+    if(button_flag) printf("sent putton press\r\n");
+    button_flag = 0;
+    // msg.data[2] = left_slider;
+    // msg.data[3] = right_slider;
     CAN_transmit(msg);
 }
 
@@ -154,75 +157,81 @@ ISR(TIMER1_OVF_vect)
 {
     ADC_start_conversion();
     struct ADC_data adc_data = ADC_get_data();
-    // if (((int)adc_data.ch_0 - x_offset) * 200 / 255 < -127)
-    // {
-    //     joystick_position.x_pos = -127;
-    // }
-    // else
-    //     joystick_position.x_pos = (adc_data.ch_0 - x_offset) * 200 / 255;
 
+
+    // Asymmetric X-scaling
     if (adc_data.ch_0 > x_offset + 3)
     {
-        printf(">0\n\r");
         if ((adc_data.ch_0 - x_offset) < 0)
         {
-            printf("Negative\n\r");
             joystick_position.x_pos = 100;
         }
         else
         {
-            // joystick_position.x_pos = (adc_data.ch_0 - x_offset) * 127 / (255 - x_offset);
             joystick_position.x_pos = (adc_data.ch_0 - x_offset) * 100 / (255 - x_offset);
         }
     }
-
     else if (adc_data.ch_0 < x_offset - 3)
     {
         if ((adc_data.ch_0 - x_offset) * 100 / (x_offset) < -100)
             joystick_position.x_pos = -100;
         else
         {
-            // joystick_position.x_pos = (adc_data.ch_0 - x_offset) * 200 / 255;
             joystick_position.x_pos = (adc_data.ch_0 - x_offset) * 100 / (x_offset);
         }
     }
     else
         joystick_position.x_pos = 0;
-
-    printf("ADC x_pos: %d\n\r", adc_data.ch_0);
-    printf("Joy x_pos: %d\n\r\n\r", joystick_position.x_pos);
-    if (((int)adc_data.ch_1 - y_offset) * 200 / 255 < -127)
+    
+    // Asymmetric Y-scaling
+    if (adc_data.ch_1 > y_offset + 3)
     {
-        joystick_position.y_pos = -127;
+        if ((adc_data.ch_1 - y_offset) < 0)
+        {
+            joystick_position.y_pos = 100;
+        }
+        else
+        {
+            joystick_position.y_pos = (adc_data.ch_1 - y_offset) * 100 / (255 - y_offset);
+        }
+    }
+    else if (adc_data.ch_1 < y_offset - 3)
+    {
+        if ((adc_data.ch_1 - y_offset) * 100 / (y_offset) < -100)
+            joystick_position.y_pos = -100;
+        else
+        {
+            joystick_position.y_pos = (adc_data.ch_1 - y_offset) * 100 / (y_offset);
+        }
     }
     else
-        joystick_position.y_pos = (adc_data.ch_1 - y_offset) * 200 / 255;
+        joystick_position.y_pos = 0;
 
     left_slider = (adc_data.ch_2) * 100 / 255;
     right_slider = (adc_data.ch_3) * 100 / 255;
     // printf("x_pos: %d \r\n",joystick_position.x_pos);
     if (send)
     {
-        send_joy_pos();
-        // printf("joy_pos sent: %d\r\n", joystick_position.x_pos);
-        if (button_flag)
-        {
-            // if (!button_delay)
-            // {
-            button_flag = 0;
-            CAN_message button_msg;
-            button_msg.id = 2;
-            button_msg.length = 1;
-            button_msg.data[0] = 1;
+        send_joy_and_btn();
+        // // printf("joy_pos sent: %d\r\n", joystick_position.x_pos);
+        // if (button_flag)
+        // {
+        //     // if (!button_delay)
+        //     // {
+        //     button_flag = 0;
+        //     CAN_message button_msg;
+        //     button_msg.id = 2;
+        //     button_msg.length = 1;
+        //     button_msg.data[0] = 1;
 
-            CAN_transmit(button_msg);
-            printf("button press sent\n\r");
+        //     CAN_transmit(button_msg);
+        //     printf("button press sent\n\r");
 
-            //         button_delay = 10;
-            //     }
-        }
-        // if(button_delay)
-        //     button_delay--;
+        //     //         button_delay = 10;
+        //     //     }
+        // }
+        // // if(button_delay)
+        // //     button_delay--;
     }
 
     TCNT1 = 65535 - (F_CPU / 1024) / REFRESH_RATE; // reset timer

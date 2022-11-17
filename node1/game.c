@@ -26,7 +26,7 @@ void play_game(){
     CAN_transmit(motor_enable);
 
 
-
+    joystick_reset_button_flag();
     multifunction_board_start_sending();
 
     OLED_reset();

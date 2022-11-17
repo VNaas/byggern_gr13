@@ -72,6 +72,7 @@ struct ADC_data ADC_get_data(void){
 ISR(INT2_vect){
     adc_data.ch_0 = adc_ptr[0x00];
     adc_data.ch_1 = adc_ptr[0x00];
+    // printf("ADC y %d\r\n", adc_data.ch_1);
     adc_data.ch_2 = adc_ptr[0x00];
     adc_data.ch_3 = adc_ptr[0x00];
 }
