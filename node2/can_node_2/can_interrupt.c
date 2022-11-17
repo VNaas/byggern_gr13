@@ -74,7 +74,7 @@ void CAN0_Handler(void)
 
 		switch (message.id)
 		{
-		case CAN_ID_JOY_POS:
+		case CAN_ID_JOY_AND_BTN:
 			// LED_toggleYellow();
 			joy_pos_flag = 1;
 			set_PWM(message.data[1]);
@@ -86,7 +86,7 @@ void CAN0_Handler(void)
 			btn_flag = 1;
             trigger_solenoid();
 			// printf("Button press\n\r");
-			LED_toggleGreen();
+			// LED_toggleGreen();
 			break;
 
 		case CAN_ID_MOTOR_ENABLE:

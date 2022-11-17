@@ -11,7 +11,7 @@
 #define CAN_INTERRUPT_H_
 
 #include "can_node_2/can_controller.h"
-#define CAN_ID_JOY_POS 13 // 2 on node 1?
+#define CAN_ID_JOY_AND_BTN 13 // 2 on node 1?
 #define CAN_ID_JOY_DIR
 #define CAN_ID_BTN_PRESS 21 //3 on node 1?
 #define CAN_ID_MOTOR_ENABLE 45 //5 on node 1

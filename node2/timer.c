@@ -52,7 +52,7 @@ void _delay_ms(int ms)
     // printf("count = %d\n\r", us_ticks);
     systick_timer_init();
     while (us_ticks){}
-    LED_toggleGreen();
+    // LED_toggleGreen();
 }
 
 /* Decrements counter. If reached zero, disable systick clock */

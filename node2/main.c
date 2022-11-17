@@ -31,7 +31,6 @@
 int main()
 {
     SystemInit();
-
     WDT->WDT_MR = WDT_MR_WDDIS; // Disable Watchdog Timer
     configure_uart();
     LED_init();
@@ -48,6 +47,11 @@ int main()
     int position;
     CAN_MESSAGE msg;
     int busy = 1;
+    motor_enable();
+
+    printf("Hei\n\r");
+    trigger_solenoid();
+
     while (1)
     {
         busy = can_receive(&msg, 1);
@@ -55,14 +59,16 @@ int main()
         {
             switch (msg.id)
             {
-            case CAN_ID_JOY_POS:
-                set_PWM(msg.data[1]);
+            case CAN_ID_JOY_AND_BTN:
                 control_motor_from_joy_pos(msg.data[0]);
+                set_PWM(msg.data[1]);
+                if (msg.data[2])
+                    trigger_solenoid();
                 break;
 
             case CAN_ID_BTN_PRESS:
-                trigger_solenoid();
-                LED_toggleGreen();
+                // LED_toggleGreen();
+                LED_greenOn();
                 break;
 
             case CAN_ID_MOTOR_ENABLE:
@@ -78,8 +84,8 @@ int main()
                 break;
             }
         }
-        _delay_ms_v2(1000);
-        LED_toggleYellow();
-        read_decoder();
+        else
+            // LED_toggleYellow();
+            read_decoder();
     }
 }

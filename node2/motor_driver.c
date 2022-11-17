@@ -119,8 +119,8 @@ int read_decoder()
 
 void control_motor_from_joy_pos(int8_t joy_pos)
 {
-    int min_xpos = -128;
-    int max_xpos = 69;
+    int max_xpos = 100;
+    int min_xpos = 100;
 
     int speed = 0;
 

@@ -54,7 +54,6 @@ void TC3_Handler(void)
     {
         TC1->TC_CHANNEL[0].TC_CCR = TC_CCR_CLKDIS;
         NVIC_DisableIRQ(TC3_IRQn);
-        LED_toggleGreen();
     }
     else
         // timerv2_init();
