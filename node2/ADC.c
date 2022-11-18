@@ -45,13 +45,13 @@ void ADC_Handler(void)
         printf("ADC val: %d\n\r",val);
 
         CAN_MESSAGE IR_interrupted;
-        IR_interrupted.id = 53;
+        IR_interrupted.id = 0b110000;
         IR_interrupted.data_length = 1;
         IR_interrupted.data[0] = 1;
 
-        int busy = can_send(&IR_interrupted, 1); //TODO: få hjelp med denne
+        int busy = can_send(&IR_interrupted, 0); //TODO: få hjelp med denne
 
-        if(!busy) LED_toggleGreen();
+        // if(!busy) LED_toggleGreen();
     }
     else
     {

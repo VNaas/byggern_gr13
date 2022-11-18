@@ -9,10 +9,11 @@
 #include "PWM.h"
 #include "ADC.h"
 #include "timer.h"
-#include "timer_v2.h"
+#include "CAN_reader.h"
 #include "motor_driver.h"
 #include "DAC.h"
 #include "solenoid.h"
+#include "PID_controller.h"
 
 // void test_can()
 // {
@@ -40,28 +41,45 @@ int main()
     PWM_init();
     ADC_init();
     motor_init();
-    motor_disable();
     solenoid_init();
     LED_greenOff();
     LED_yellowOff();
     int position;
     CAN_MESSAGE msg;
     int busy = 1;
-    motor_enable();
 
     printf("Hei\n\r");
-    trigger_solenoid();
+    // trigger_solenoid();
+    timer_v2_init();
+    int16_t y; // Decoder value
+    int8_t x;  // Scaled position [-100,100]
+    int8_t u;  // Input to motor
+    int8_t r;  // Reference signal
 
     while (1)
     {
-        busy = can_receive(&msg, 1);
-        if (!busy)
+
+        if (get_CAN_flag())
         {
+            clear_CAN_flag();
+            msg = get_CAN_msg();
             switch (msg.id)
             {
             case CAN_ID_JOY_AND_BTN:
-                control_motor_from_joy_pos(msg.data[0]);
+                y = read_decoder();
+                if (y != 0)
+                    LED_toggleYellow();
+                x = scale_measurement(y);
+                r = msg.data[0];
+                u = PID(x, r);
+                control_motor(u);
                 set_PWM(msg.data[1]);
+
+                CAN_MESSAGE test_msg;
+                test_msg.id = 0b110111;
+                test_msg.data_length = 1;
+                test_msg.data[0] = 1;
+                can_send(&test_msg, 0);
                 if (msg.data[2])
                     trigger_solenoid();
                 break;
@@ -84,8 +102,9 @@ int main()
                 break;
             }
         }
-        else
-            // LED_toggleYellow();
-            read_decoder();
+        // else
+        // LED_toggleYellow();
+        //     read_decoder();
+        // LED_toggleGreen();
     }
 }

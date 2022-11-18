@@ -10,6 +10,9 @@
 #define NOT_RST (1 << 1)
 #define ENCODER_DATA_PINS (0b11111111 << 1)
 
+volatile uint16_t max_decoder_value;
+volatile uint16_t min_decoder_value;
+
 void motor_init(void)
 {
     DAC_init();
@@ -42,7 +45,16 @@ void motor_init(void)
     PMC->PMC_PCER0 |= 1 << (ID_PIOC);
     PMC->PMC_PCER0 |= 1 << (ID_PIOD);
 
-    toBinary((char)(PIOD->PIO_OSR &0xFF));
+    // toBinary((char)(PIOD->PIO_OSR &0xFF));
+    PIOD->PIO_SODR = EN;
+
+    control_motor(-40);
+    _delay_ms(3000);
+    reset_decoder();
+    control_motor(40);
+    _delay_ms(3000);
+    control_motor(0);
+    max_decoder_value = read_decoder();
 }
 
 void motor_enable()
@@ -63,6 +75,16 @@ void set_motor_speed(uint16_t value)
     DAC_write(value);
 }
 
+int8_t scale_measurement(int16_t measurement)
+{
+    int8_t x = (200 * (measurement - max_decoder_value / 2) / max_decoder_value);
+    if (x > 100)
+        x = 100;
+    if (x < -100)
+        x = -100;
+    return x;
+}
+
 void set_motor_direction(enum motor_direction dir)
 {
     if (dir == LEFT)
@@ -74,7 +96,12 @@ void set_motor_direction(enum motor_direction dir)
         PIOD->PIO_SODR |= DIR;
     }
 }
-
+void reset_decoder()
+{
+    PIOD->PIO_CODR |= NOT_RST;
+    _delay_us(20);
+    PIOD->PIO_SODR |= NOT_RST;
+}
 int read_decoder()
 {
 
@@ -117,17 +144,17 @@ int read_decoder()
     return result;
 }
 
-void control_motor_from_joy_pos(int8_t joy_pos)
+void control_motor(int8_t x_pos)
 {
     int max_xpos = 100;
     int min_xpos = 100;
 
     int speed = 0;
 
-    if (joy_pos < 0)
+    if (x_pos < 0)
     {
         set_motor_direction(LEFT);
-        speed = (abs(joy_pos) * (int)(4096 / abs(min_xpos)));
+        speed = (abs(x_pos) * (int)(4096 / abs(min_xpos)));
         if (speed >= 4096)
         {
             speed = 4095;
@@ -136,7 +163,7 @@ void control_motor_from_joy_pos(int8_t joy_pos)
     else
     {
         set_motor_direction(RIGHT);
-        speed = (abs(joy_pos) * (int)(4096 / abs(max_xpos)));
+        speed = (abs(x_pos) * (int)(4096 / abs(max_xpos)));
         if (speed >= 4096)
         {
             speed = 4095;

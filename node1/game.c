@@ -36,7 +36,7 @@ void play_game(){
     uint32_t seconds_lasted = 0;
     uint16_t ms_from_second_increase = 0;
 
-
+    int game_over = 0;
     while (1)
     {
         _delay_ms(1);
@@ -51,6 +51,7 @@ void play_game(){
 
             printf("received can msg with id: %d\n\r", msg.id);
             if (msg.id == IR_INTERRUPTED_ID){
+                printf("IR interrupted\n\r");
                 break;
             }
         }

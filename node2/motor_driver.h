@@ -20,8 +20,9 @@ void set_motor_direction(enum motor_direction dir);
 
 int read_decoder();
 
-void control_motor_from_joy_pos(int8_t joy_pos);
+void control_motor(int8_t joy_pos);
 
+int8_t scale_measurement(int16_t measurement);
 
 
 
