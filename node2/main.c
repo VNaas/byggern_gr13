@@ -35,22 +35,20 @@ int main()
     WDT->WDT_MR = WDT_MR_WDDIS; // Disable Watchdog Timer
     configure_uart();
     LED_init();
-    int LEDon = 1;
-    // printf("Hello World\n\r");
+    LED_greenOff();
+    LED_yellowOff();
+    timer_v2_init();
     can_init_def_tx_rx_mb();
     PWM_init();
     ADC_init();
     motor_init();
     solenoid_init();
-    LED_greenOff();
-    LED_yellowOff();
     int position;
     CAN_MESSAGE msg;
     int busy = 1;
 
     printf("Hei\n\r");
     // trigger_solenoid();
-    timer_v2_init();
     int16_t y; // Decoder value
     int8_t x;  // Scaled position [-100,100]
     int8_t u;  // Input to motor
@@ -68,25 +66,22 @@ int main()
             case CAN_ID_JOY_AND_BTN:
                 y = read_decoder();
                 if (y != 0)
-                    LED_toggleYellow();
+                    // LED_toggleYellow();
                 x = scale_measurement(y);
                 r = msg.data[0];
                 u = PID(x, r);
                 control_motor(u);
                 set_PWM(msg.data[1]);
 
-                CAN_MESSAGE test_msg;
-                test_msg.id = 0b110111;
-                test_msg.data_length = 1;
-                test_msg.data[0] = 1;
-                can_send(&test_msg, 0);
-                if (msg.data[2])
+
+                if (msg.data[2]){
                     trigger_solenoid();
+                    LED_toggleGreen();}
                 break;
 
             case CAN_ID_BTN_PRESS:
                 // LED_toggleGreen();
-                LED_greenOn();
+                // LED_greenOn();
                 break;
 
             case CAN_ID_MOTOR_ENABLE:

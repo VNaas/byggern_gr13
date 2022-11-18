@@ -2,6 +2,7 @@
 #include "sam.h"
 #include "timer.h"
 #include "toBinary.h"
+#include "LED.h"
 
 #define EN (1 << 9)
 #define DIR (1 << 10)
@@ -48,10 +49,11 @@ void motor_init(void)
     // toBinary((char)(PIOD->PIO_OSR &0xFF));
     PIOD->PIO_SODR = EN;
 
-    control_motor(-40);
+    control_motor(-60);
     _delay_ms(3000);
     reset_decoder();
-    control_motor(40);
+    int16_t result = read_decoder();
+    control_motor(60);
     _delay_ms(3000);
     control_motor(0);
     max_decoder_value = read_decoder();
@@ -77,11 +79,15 @@ void set_motor_speed(uint16_t value)
 
 int8_t scale_measurement(int16_t measurement)
 {
-    int8_t x = (200 * (measurement - max_decoder_value / 2) / max_decoder_value);
+    int8_t x = (200 * (measurement - (max_decoder_value / 2)) / max_decoder_value);
     if (x > 100)
+    {
         x = 100;
+    }
     if (x < -100)
+    {
         x = -100;
+    }
     return x;
 }
 
