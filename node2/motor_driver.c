@@ -49,12 +49,22 @@ void motor_init(void)
     // toBinary((char)(PIOD->PIO_OSR &0xFF));
     PIOD->PIO_SODR = EN;
 
-    control_motor(-60);
-    _delay_ms(3000);
+    reset_decoder();
+    control_motor(40);
+    for(int i =0;i<10;i++){
+        read_decoder();
+        _delay_ms(300);
+    }
+    _delay_ms(300);
+    control_motor(0);
     reset_decoder();
     int16_t result = read_decoder();
-    control_motor(60);
-    _delay_ms(3000);
+    control_motor(-40);
+        for(int i =0;i<10;i++){
+        read_decoder();
+        _delay_ms(300);
+    }
+    _delay_ms(300);
     control_motor(0);
     max_decoder_value = read_decoder();
 }
@@ -88,7 +98,7 @@ int8_t scale_measurement(int16_t measurement)
     {
         x = -100;
     }
-    return x;
+    return -x;
 }
 
 void set_motor_direction(enum motor_direction dir)
@@ -105,7 +115,7 @@ void set_motor_direction(enum motor_direction dir)
 void reset_decoder()
 {
     PIOD->PIO_CODR |= NOT_RST;
-    _delay_us(20);
+    _delay_us(40);
     PIOD->PIO_SODR |= NOT_RST;
 }
 int read_decoder()
@@ -144,7 +154,7 @@ int read_decoder()
 
     // combine high_byte and low_byte into result:
     uint16_t result = ((high_byte << 8) | low_byte);
-    printf("decoder_result: %d\n\r", result);
+    // printf("decoder_result: %d\n\r", result);
     // maybe fix overflow?
 
     return result;

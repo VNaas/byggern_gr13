@@ -9,7 +9,7 @@ static int us_ticks = 0;
 CAN_MESSAGE msg;
 volatile int can_flag;
 
-void timer_v2_init()
+void CAN_reader_init()
 {
     us_ticks = 5000;
     PMC->PMC_PCR = PMC_PCR_EN | PMC_PCR_DIV_PERIPH_DIV_MCK | (ID_TC3 << PMC_PCR_PID_Pos);
@@ -53,7 +53,7 @@ void clear_CAN_flag()
 // {
 //     us_ticks = us;
 
-//     timer_v2_init();
+//     CAN_reader_init();
 //     while (us_ticks)
 //         ;
 // }

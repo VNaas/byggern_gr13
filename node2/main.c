@@ -37,15 +37,13 @@ int main()
     LED_init();
     LED_greenOff();
     LED_yellowOff();
-    timer_v2_init();
+    CAN_reader_init();
     can_init_def_tx_rx_mb();
     PWM_init();
     ADC_init();
     motor_init();
     solenoid_init();
-    int position;
     CAN_MESSAGE msg;
-    int busy = 1;
 
     printf("Hei\n\r");
     // trigger_solenoid();
@@ -57,6 +55,7 @@ int main()
     while (1)
     {
 
+        
         if (get_CAN_flag())
         {
             clear_CAN_flag();
@@ -67,16 +66,22 @@ int main()
                 y = read_decoder();
                 if (y != 0)
                     // LED_toggleYellow();
-                x = scale_measurement(y);
+                    x = scale_measurement(y);
                 r = msg.data[0];
                 u = PID(x, r);
                 control_motor(u);
                 set_PWM(msg.data[1]);
 
-
-                if (msg.data[2]){
+                if (msg.data[2])
+                {
+                    // CAN_MESSAGE test_msg;
+                    // test_msg.id = 0b110111;
+                    // test_msg.data_length = 1;
+                    // test_msg.data[0] = 1;
+                    // can_send(&test_msg, 0);
                     trigger_solenoid();
-                    LED_toggleGreen();}
+                    LED_toggleGreen();
+                }
                 break;
 
             case CAN_ID_BTN_PRESS:

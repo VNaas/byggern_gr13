@@ -2,7 +2,7 @@
 #define TIMERV2_H
 #include "can_node_2/can_controller.h"
 
-void timer_v2_init();
+void CAN_reader_init();
 
 // void _delay_ms_v2(int ms);
 

@@ -118,7 +118,7 @@ void send_joy_and_btn()
     CAN_message msg;
     msg.id = 1;
     msg.length = 3;
-    msg.data[0] = joystick_position.x_pos;
+    msg.data[0] = (joystick_position.x_pos);
     msg.data[1] = joystick_position.y_pos;
     msg.data[2] = button_flag;
     if(button_flag) printf("sent putton press\r\n");

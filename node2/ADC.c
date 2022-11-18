@@ -25,7 +25,7 @@ void ADC_init()
                     ADC_EMR_CMPALL      |
                     ADC_EMR_CMPFILTER(0);
 
-    ADC->ADC_CWR = ADC_CWR_LOWTHRES(500); // Hopefully 1V threshold?
+    ADC->ADC_CWR = ADC_CWR_LOWTHRES(200); // Hopefully 1V threshold?
     ADC->ADC_CHER = ADC_CHER_CH0;
 
 	NVIC_EnableIRQ(ADC_IRQn);
@@ -49,9 +49,7 @@ void ADC_Handler(void)
         IR_interrupted.data_length = 1;
         IR_interrupted.data[0] = 1;
 
-        int busy = can_send(&IR_interrupted, 0); //TODO: få hjelp med denne
-
-        // if(!busy) LED_toggleGreen();
+        can_send(&IR_interrupted, 0);
     }
     else
     {
