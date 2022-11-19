@@ -48,7 +48,6 @@ void PWM_init()
 
 void set_PWM(int8_t joy_pos)
 {
-    // printf("joy_pos: %d\n\r", joy_pos);
     int min_xpos = -100;
     int max_xpos = 100;
     double period;

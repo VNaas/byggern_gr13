@@ -35,14 +35,9 @@ void ADC_init()
 void ADC_Handler(void)
 {
     uint32_t adc_isr = ADC->ADC_ISR;
-    // toBinary(adc_isr);
 
-    //printf("ISR: %d \n\r", adc_isr);
     if(adc_isr & ADC_ISR_COMPE){
-        //printf("Comparison interrupt: \n\r");
         int val = ADC->ADC_CDR[0];
-
-        printf("ADC val: %d\n\r",val);
 
         CAN_MESSAGE IR_interrupted;
         IR_interrupted.id = 0b110000;
@@ -50,10 +45,6 @@ void ADC_Handler(void)
         IR_interrupted.data[0] = 1;
 
         can_send(&IR_interrupted, 0);
-    }
-    else
-    {
-        // printf("No COMPE: %d\n\r", ADC->ADC_CDR[0]);
     }
 	NVIC_ClearPendingIRQ(ID_ADC);
 }

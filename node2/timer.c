@@ -47,12 +47,9 @@ void _delay_us(int us)
 
 void _delay_ms(int ms)
 {
-    // printf("delaying\n\r");
     us_ticks = 1000 * ms;
-    // printf("count = %d\n\r", us_ticks);
     systick_timer_init();
     while (us_ticks){}
-    // LED_toggleGreen();
 }
 
 /* Decrements counter. If reached zero, disable systick clock */
@@ -70,12 +67,3 @@ void SysTick_Handler( void )
     }
     NVIC_ClearPendingIRQ(SysTick_IRQn);
 }
-
-// void _delay_count(int us)
-// {
-//     us_ticks = us*5000;
-//     while (us_ticks != 0)
-//     {
-//         us_ticks--;
-//     }
-// }

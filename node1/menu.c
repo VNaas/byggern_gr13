@@ -30,7 +30,7 @@ void show_high_scores(void)
 
 void play()
 {
-    
+
     play_game();
     return;
 }
@@ -52,7 +52,7 @@ void set_low_brightness()
 
 void set_medium_brightness()
 {
-    OLED_set_brightness(100);
+    OLED_set_brightness(150);
 }
 
 void set_high_brightness()
@@ -77,21 +77,18 @@ void print_menu(MenuNode *menu)
     }
 }
 
-
 MenuNode *init_menu()
 {
     MenuNode *mainMenuNode = new_menu_node("Main Menu", NULL, NULL);
     MenuNode *playGameNode = new_menu_node("Play Game", mainMenuNode, &play);
     MenuNode *settingsNode = new_menu_node("Settings", mainMenuNode, NULL);
-    MenuNode *highscoresNode = new_menu_node("Display Highscores", mainMenuNode, show_high_scores);
 
     MenuNode *brightnessNode = new_menu_node("Set Brightness", settingsNode, NULL);
-    //MenuNode *difficultyNode = new_menu_node("Set Difficulty", settingsNode, NULL);
-    //MenuNode *fontSizeNode = new_menu_node("Set font size", settingsNode, NULL);
+    // MenuNode *fontSizeNode = new_menu_node("Set font size", settingsNode, NULL);
 
     MenuNode *lowBrightnessNode = new_menu_node("Low", brightnessNode, &set_low_brightness);
-    MenuNode *mediumBrightnessNode = new_menu_node("Medium", brightnessNode, &set_low_brightness);
-    MenuNode *highBrightnessNode = new_menu_node("High", brightnessNode, &set_low_brightness);
+    MenuNode *mediumBrightnessNode = new_menu_node("Medium", brightnessNode, &set_medium_brightness);
+    MenuNode *highBrightnessNode = new_menu_node("High", brightnessNode, &set_high_brightness);
 
     // MenuNode *lowFontSizeNode = new_menu_node("Low", fontSizeNode, &set_low_brightness);
     // MenuNode *mediumFontSizeNode = new_menu_node("Medium", fontSizeNode, &set_medium_brightness);
@@ -99,14 +96,12 @@ MenuNode *init_menu()
 
     mainMenuNode->children[PLAY_GAME] = playGameNode;
     mainMenuNode->children[SETTINGS] = settingsNode;
-    mainMenuNode->children[HIGHSCORE] = highscoresNode;
-    mainMenuNode->numChildren = 3;
+    mainMenuNode->numChildren = 2;
     mainMenuNode->isMenu = 1;
 
     settingsNode->children[CHANGE_BRIGHTNESS] = brightnessNode;
-    //settingsNode->children[SET_DIFFICULTY] = difficultyNode;
-    //settingsNode->children[SET_FONTSIZE] = fontSizeNode;
-    settingsNode->numChildren = 3;
+    // settingsNode->children[SET_FONTSIZE] = fontSizeNode;
+    settingsNode->numChildren = 1;
     settingsNode->isMenu = 1;
 
     // fontSizeNode->children[LOW] = lowFontSizeNode;
@@ -115,9 +110,9 @@ MenuNode *init_menu()
     // fontSizeNode->numChildren = 3;
 
     brightnessNode->children[LOW] = lowBrightnessNode;
-    // brightnessNode->children[MEDIUM] = mediumBrightnessNode;
+    brightnessNode->children[MEDIUM] = mediumBrightnessNode;
     brightnessNode->children[HIGH] = highBrightnessNode;
-    brightnessNode->numChildren = 2;
+    brightnessNode->numChildren = 3;
     brightnessNode->isMenu = 1;
     return mainMenuNode;
 }
@@ -133,7 +128,7 @@ void menu()
     OLED_reset();
     print_menu(currentMenu);
     int counter = 0;
-    printf("Number of children: %d\r\n",currentMenu->numChildren);
+    printf("Number of children: %d\r\n", currentMenu->numChildren);
     OLED_print_arrow(choice + 1, 0);
     while (1)
     {
@@ -145,8 +140,9 @@ void menu()
             OLED_delete_arrow(choice + 1);
             if (currentMenu->parent == NULL)
             {
-                if(choice == 0){
-                    choice = currentMenu->numChildren-1;
+                if (choice == 0)
+                {
+                    choice = currentMenu->numChildren - 1;
                 }
                 else
                 {
@@ -184,7 +180,6 @@ void menu()
             if (choice == currentMenu->numChildren)
             { // choise is Return
                 currentMenu = currentMenu->parent;
-                // OLED_delete_arrow(choice + 1);
                 choice = 0;
                 print_menu(currentMenu);
                 OLED_print_arrow(choice + 1, 0);
@@ -192,7 +187,6 @@ void menu()
             else if (currentMenu->children[choice]->isMenu)
             {
                 currentMenu = currentMenu->children[choice];
-                // OLED_delete_arrow(choice + 1);
                 choice = 0;
                 print_menu(currentMenu);
                 OLED_print_arrow(choice + 1, 0);
@@ -200,6 +194,11 @@ void menu()
             else
             {
                 currentMenu->children[choice]->func();
+                if (currentMenu->name == "Main Menu")
+                {
+                    print_menu(currentMenu);
+                    OLED_print_arrow(choice + 1,0);
+                }
             }
             joystick_reset_button_flag();
         }

@@ -82,18 +82,12 @@ void CAN0_Handler(void)
 			can_message = message;
 			break;
 
-		case CAN_ID_BTN_PRESS:
-			btn_flag = 1;
-            trigger_solenoid();
-			// printf("Button press\n\r");
-			// LED_toggleGreen();
-			break;
 
 		case CAN_ID_MOTOR_ENABLE:
 			motor_enable();
 			break;
 
-		case CAN_ID_MOTOR_DISABLE: //this has the wrong value in can_interrupt.h
+		case CAN_ID_MOTOR_DISABLE: 
 			motor_disable();
 			break;
 
@@ -135,5 +129,4 @@ void CAN0_Handler(void)
 	}
 
 	NVIC_ClearPendingIRQ(CAN0_IRQn);
-	// sei();*/
 }

@@ -37,6 +37,7 @@ void play_game(){
     uint16_t ms_from_second_increase = 0;
 
     int game_over = 0;
+    CAN_receive();
     while (1)
     {
         _delay_ms(1);
@@ -44,14 +45,11 @@ void play_game(){
         if(ms_from_second_increase == 1000){
             seconds_lasted ++;
             ms_from_second_increase = 0;
-            // printf("a sec has passed\n\r");
         }
         if(CAN_getFlag()){
             msg = CAN_receive();
 
-            printf("received can msg with id: %d\n\r", msg.id);
             if (msg.id == IR_INTERRUPTED_ID){
-                printf("IR interrupted\n\r");
                 break;
             }
         }
@@ -62,15 +60,16 @@ void play_game(){
     motor_disable.id = 7;
     motor_disable.length = 1;
     motor_disable.data[0] = 0;
-
     //print game over
     OLED_reset();
     OLED_pos(2, 8);
 	OLED_print("    GAME OVER    ");
     OLED_pos(4, 8);
-    //OLED_print("You lasted for %d seconds", seconds_lasted);
-
-    //return to menu on button press?
+    OLED_print("Seconds lasted: ");
+    OLED_print_number(seconds_lasted);
+    OLED_pos(6, 8);
+    
+    OLED_print("Press button to return");
 
     while (!joystick_get_button_flag());
 

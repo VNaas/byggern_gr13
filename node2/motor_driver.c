@@ -130,33 +130,24 @@ int read_decoder()
     // wait 20us for output to settle
     _delay_us(20);
 
-    // // read MJ2 to get high byte
+    // read MJ2 to get high byte
     uint32_t high_byte = (PIOC->PIO_PDSR & ENCODER_DATA_PINS) >> 1;
-    // // printf("high_byte: %d\n\r", high_byte);
 
-    // // set SEL high to output low byte:
+    // set SEL high to output low byte:
     PIOD->PIO_SODR |= SEL;
 
     // wait 20us for output to settle
     _delay_us(20);
 
-    // // read MJ2 to get low value:
+    // read MJ2 to get low value:
     uint32_t low_byte = (PIOC->PIO_PDSR & ENCODER_DATA_PINS) >> 1;
-    // // printf("low_byte: %d\n\r", low_byte);
-
-    // Reset encoder
-    // PIOD->PIO_CODR |= NOT_RST;
-    // _delay_us(20);
-    // PIOD->PIO_SODR |= NOT_RST;
+    // printf("low_byte: %d\n\r", low_byte);
 
     // set not_oe to high:
     PIOD->PIO_SODR = NOT_OE;
 
     // combine high_byte and low_byte into result:
     uint16_t result = ((high_byte << 8) | low_byte);
-    // printf("decoder_result: %d\n\r", result);
-    // maybe fix overflow?
-
     return result;
 }
 
@@ -187,6 +178,5 @@ void control_motor(int8_t x_pos)
     }
 
     uint16_t uint_speed = (uint16_t)(speed);
-    // printf("uint_speed: %d \n\r", uint_speed);
     set_motor_speed(uint_speed);
 }

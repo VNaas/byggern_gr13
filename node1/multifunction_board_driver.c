@@ -121,10 +121,7 @@ void send_joy_and_btn()
     msg.data[0] = (joystick_position.x_pos);
     msg.data[1] = joystick_position.y_pos;
     msg.data[2] = button_flag;
-    if(button_flag) printf("sent putton press\r\n");
     button_flag = 0;
-    // msg.data[2] = left_slider;
-    // msg.data[3] = right_slider;
     CAN_transmit(msg);
 }
 
@@ -140,17 +137,8 @@ void multifunction_board_stop_sending()
 
 ISR(INT1_vect)
 {
-    printf("button pressed\n\r");
     button_flag = 1;
-    // if (send){
-    //     CAN_message msg;
-    //     msg.id = 2;
-    //     msg.length = 1;
-    //     msg.data[0] = 1;
 
-    //     CAN_transmit(msg);
-    //     printf("button press sent\n\r");
-    // }
 }
 
 ISR(TIMER1_OVF_vect)
@@ -209,29 +197,9 @@ ISR(TIMER1_OVF_vect)
 
     left_slider = (adc_data.ch_2) * 100 / 255;
     right_slider = (adc_data.ch_3) * 100 / 255;
-    // printf("x_pos: %d \r\n",joystick_position.x_pos);
     if (send)
     {
         send_joy_and_btn();
-        // // printf("joy_pos sent: %d\r\n", joystick_position.x_pos);
-        // if (button_flag)
-        // {
-        //     // if (!button_delay)
-        //     // {
-        //     button_flag = 0;
-        //     CAN_message button_msg;
-        //     button_msg.id = 2;
-        //     button_msg.length = 1;
-        //     button_msg.data[0] = 1;
-
-        //     CAN_transmit(button_msg);
-        //     printf("button press sent\n\r");
-
-        //     //         button_delay = 10;
-        //     //     }
-        // }
-        // // if(button_delay)
-        // //     button_delay--;
     }
 
     TCNT1 = 65535 - (F_CPU / 1024) / REFRESH_RATE; // reset timer

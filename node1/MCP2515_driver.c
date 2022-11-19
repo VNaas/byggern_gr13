@@ -52,14 +52,6 @@ void MCP2515_reset()
 #define PHSEG2 0
 #define BTL 7
 
-// void toBinary(char a)
-// {
-//     char i;
-
-//     for(i=0x80;i!=0;i>>=1)
-//         printf("%c",(a&i)?'1':'0');
-// }
-
 void MCP2512_setBaudRate()
 {
     int8_t baud_conf = 0;
@@ -74,13 +66,6 @@ void MCP2512_setBaudRate()
     cnf2_val |= 0x1 << BTL;
 
     cnf3_val |= 0x5 << PHSEG2; // 00000101
-    // printf("\r\n");
-    // toBinary(cnf1_val);
-    // printf("\r\n");
-    // toBinary(cnf2_val);
-    // printf("\r\n");
-    // toBinary(cnf3_val);
-
 
     MCP2515_write(MCP_CNF1,&cnf1_val,1);
     MCP2515_write(MCP_CNF2,&cnf2_val,1);

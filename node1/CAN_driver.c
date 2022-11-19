@@ -123,5 +123,4 @@ int CAN_getFlag()
 ISR(INT0_vect)
 {
     receiveFlag = 1;
-    printf("we received something!\n\r");
 }

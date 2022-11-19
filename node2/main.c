@@ -15,19 +15,7 @@
 #include "solenoid.h"
 #include "PID_controller.h"
 
-// void test_can()
-// {
-//     CAN_MESSAGE msg;
-//     while(1){
-//         if(!can_receive(&msg,0)){
-//             for(int i = 0; i< msg.data_length; i ++)
-//             {
-//                 printf(msg.data[i]);
-//             }
-//             printf("\r\n");
-//         }
-//     }
-// }
+
 
 int main()
 {
@@ -44,9 +32,6 @@ int main()
     motor_init();
     solenoid_init();
     CAN_MESSAGE msg;
-
-    printf("Hei\n\r");
-    // trigger_solenoid();
     int16_t y; // Decoder value
     int8_t x;  // Scaled position [-100,100]
     int8_t u;  // Input to motor
@@ -65,7 +50,6 @@ int main()
             case CAN_ID_JOY_AND_BTN:
                 y = read_decoder();
                 if (y != 0)
-                    // LED_toggleYellow();
                     x = scale_measurement(y);
                 r = msg.data[0];
                 u = PID(x, r);
@@ -74,19 +58,9 @@ int main()
 
                 if (msg.data[2])
                 {
-                    // CAN_MESSAGE test_msg;
-                    // test_msg.id = 0b110111;
-                    // test_msg.data_length = 1;
-                    // test_msg.data[0] = 1;
-                    // can_send(&test_msg, 0);
                     trigger_solenoid();
                     LED_toggleGreen();
                 }
-                break;
-
-            case CAN_ID_BTN_PRESS:
-                // LED_toggleGreen();
-                // LED_greenOn();
                 break;
 
             case CAN_ID_MOTOR_ENABLE:
@@ -102,9 +76,5 @@ int main()
                 break;
             }
         }
-        // else
-        // LED_toggleYellow();
-        //     read_decoder();
-        // LED_toggleGreen();
     }
 }

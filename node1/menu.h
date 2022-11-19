@@ -16,14 +16,12 @@ typedef struct MenuNode
 typedef enum
 {
     PLAY_GAME,
-    HIGHSCORE,
     SETTINGS,
 } main_menu_t;
 
 typedef enum
 {
     CHANGE_BRIGHTNESS,
-    SET_DIFFICULTY,
     SET_FONTSIZE,
     SETTINGS_RETURN
 } settings_menu_t;
